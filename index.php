@@ -34,6 +34,7 @@ $objFunction->checkLogin();
         <link href="css/style-responsive.css" rel="stylesheet"/>
         <link rel="stylesheet" type="text/css" href="js/select2/select2.css" />
         <link rel="stylesheet" type="text/css" href="css/jquery.datetimepicker.css" />
+        <link rel="stylesheet" type="text/css" href="css/autocomplete.css" />
 
         <script src="js/jquery-1.8.3.min.js"></script>
         
@@ -42,9 +43,8 @@ $objFunction->checkLogin();
         <script src="js/select2/select2.js"></script>
         <script src="js/jquery.datetimepicker.js"></script>
         <script src="js/bootstrap.min.js"></script>
-        <script src="js/jquery.base64.min.js"></script>
+        <script src="js/jquery.autocomplete.min.js" />
         
-        <link rel="stylesheet" type="text/css" href="css/jquery.datetimepicker.css" />
         <script src="js/jquery.datetimepicker.js"></script>
        
 

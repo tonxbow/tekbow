@@ -237,7 +237,9 @@ $inputClass = "col-sm-9";
                     </div>
                     <div class = "form-group">
                         <label for = "" class = "<?php echo $labelClass; ?>">Nama :</label>
-                        <div class = "<?php echo $inputClass; ?>"><input type = "text" name = "nama_obat" class = "form-control" id = "tb_new_nama_obat"></div>
+                        <!--<div class = "<?php echo $inputClass; ?>"><input type = "text" name = "nama_obat" class = "form-control" id = "tb_new_nama_obat"></div>-->
+                        <div class = "<?php echo $inputClass; ?>"><input type="text" name="nama_obat" id="tb_new_nama_obat" class="form-control"/></div>
+
                     </div>
                     <div class = "form-group">
                         <label for = "" class = "<?php echo $labelClass; ?>">Group Obat :</label>
@@ -318,10 +320,7 @@ $inputClass = "col-sm-9";
                         </div>
                     </div>
                 </form>
-            </div>
-
-
-
+            </div>    
 
         </div>
     </div>
@@ -334,7 +333,6 @@ $inputClass = "col-sm-9";
 //INISALISASI AWAL
     var obat = <?php echo json_encode($data_obat, JSON_PRETTY_PRINT) ?>;
     var satuan = <?php echo json_encode($satuan, JSON_PRETTY_PRINT) ?>;
-
     $('#tgl_trx').datetimepicker({
         format: 'Y-m-d',
         timepicker: false
@@ -343,16 +341,12 @@ $inputClass = "col-sm-9";
         format: 'Y-m-d',
         timepicker: false
     });
-
-
     input_hide();
     $('#view_pos').hide();
     $('#btn_bayar').hide();
     $('#loading').hide();
     $('#btn_cancel_transaksi').hide();
     $('#cb_nama_obat').select2();
-
-
 //SHORTCUT KEYBOARD
     document.addEventListener('keydown', function (e) {
         switch (e.keyCode)
@@ -369,7 +363,6 @@ $inputClass = "col-sm-9";
             case 115:
                 $('#total_bayar').focus();
                 break;
-
             case 119:
                 //alert('F8'); //F1
                 if (check_input())
@@ -377,7 +370,6 @@ $inputClass = "col-sm-9";
                 break;
         }
     });
-
 //FUNGSI UMUM
     function toRp(a, b, c, d, e) {
         e = function (f) {
@@ -410,7 +402,6 @@ $inputClass = "col-sm-9";
         //console.log(currentTime);
         var Month = currentTime.getMonth();
         var Datez = currentTime.getDate().toString();
-
         Month += 1;
         Month = Month.toString();
         //console.log(Month.length);
@@ -418,7 +409,6 @@ $inputClass = "col-sm-9";
             Month = '0' + Month;
         if (Datez.length == 1)
             Month = '0' + Datez;
-
         return currentTime.getFullYear() + '-' + Month + '-' + Datez;
     }
 
@@ -429,7 +419,6 @@ $inputClass = "col-sm-9";
         });
         return ret;
     };
-
 //FUNGSI KHUSUS
 
     function input_hide()
@@ -442,7 +431,6 @@ $inputClass = "col-sm-9";
     {
         $('#keterangan_obat').fadeIn();
         check_status_konsumen();
-
     }
 
     function reset_pos()
@@ -465,7 +453,6 @@ $inputClass = "col-sm-9";
         var harga = $('#tb_harga_beli').val();
         var jumlah_kecil = $('#tb_jml_kecil').val();
         var ret = false;
-
         if (nama != '0' && parseInt(harga) > 0 && parseInt(jumlah_kecil) > 0)
         {
             $('#btn_tambah_obat').slideDown();
@@ -485,7 +472,6 @@ $inputClass = "col-sm-9";
             $('#btn_tambah_data_obat').slideDown();
         else
             $('#btn_tambah_data_obat').slideUp();
-
         return ret;
     }
 
@@ -527,7 +513,6 @@ $inputClass = "col-sm-9";
 
         $('#total_' + id).text(toRp(jumlah * harga));
         get_grand_total();
-
         if (notifikasi != "")
             alert("Jumlah Melebihi Stock !");
     }
@@ -580,7 +565,6 @@ $inputClass = "col-sm-9";
         $.getJSON(url, function (result) {
             $('#id_trx').text(result['id_transaksi']);
         });
-
     }
 
     function new_transaksi()
@@ -593,12 +577,10 @@ $inputClass = "col-sm-9";
         $('#isi_data').empty();
         get_grand_total();
         $('#view_pos').slideDown("slow");
-
         $.getJSON("mod/action.php", {request: "<?php echo $objEnkrip->encode('get_data_obat'); ?>"})
                 .done(function (result) {
                     obat = result;
                 });
-
         $('#tb_kode_obat').focus();
     }
 
@@ -656,10 +638,8 @@ $inputClass = "col-sm-9";
         var harga_satuan_kecil = search_by(obat, 'id_data_obat', id_obat, 'harga_jual');
         var harga_satuan_besar = search_by(obat, 'id_data_obat', id_obat, 'harga_jual') * search_by(obat, 'id_data_obat', id_obat, 'jumlah_satuan_kecil');
         var laba = 1 + parseInt($('#sts_trx').val()) / 100;
-
         harga_satuan_kecil = Math.round(harga_satuan_kecil * laba);
         harga_satuan_besar = Math.round(harga_satuan_besar * laba);
-
         $('#satuan_obat').empty().append(
                 '<option value="' + harga_satuan_kecil + '">' + search_by(satuan, 'id_satuan', search_by(obat, 'id_data_obat', id_obat, 'satuan_kecil'), 'nama') + '</option>'
                 + '<option value="' + harga_satuan_besar + '">' + search_by(satuan, 'id_satuan', search_by(obat, 'id_data_obat', id_obat, 'satuan_besar'), 'nama') + '</option>'
@@ -674,7 +654,6 @@ $inputClass = "col-sm-9";
     function check_number(val_id)
     {
         var ret = true;
-
         if (isNaN(val_id) || val_id < 0 || val_id == '')
         {
             val_id = 0;
@@ -689,7 +668,6 @@ $inputClass = "col-sm-9";
         var ar_total = new Array();
         var temp, x = 0;
         var ret = false;
-
         for (i = 0; i < ar_isi_data.length; i++)
         {
             //console.log(ar_isi_data[i].search('total_'));
@@ -714,13 +692,11 @@ $inputClass = "col-sm-9";
         }
 
         return ret;
-
     }
 
     function add_jumlah(id, jumlah)
     {
         var jml = parseInt($('#jml_' + id).val()) + parseInt(jumlah);
-
         $('#jml_' + id).val(jml);
         ubah_jumlah(id);
     }
@@ -736,7 +712,6 @@ $inputClass = "col-sm-9";
         var harga = $('#tb_harga_beli').val();
         var expire = $('#tb_exp_date').val();
         var count = parseInt($('#isi_data tr').length) + 1;
-
         //var id_barcode = search_barcode(kode);
 
         //console.log(id_barcode);
@@ -752,7 +727,6 @@ $inputClass = "col-sm-9";
                 '<td id="satuan_' + count + '" style = "width: 120px; font-size:13px; vertical-align:middle;"> ' + satuan + ' </td>' +
                 '<td id="harga_' + count + '" style = "width: 120px; font-size:15px; vertical-align:middle;"> ' + toRp(harga) + ' </td></tr>'
                 );
-
         get_grand_total();
         input_hide();
         reset_pos();
@@ -760,16 +734,16 @@ $inputClass = "col-sm-9";
 
 //FUNGSI EVENT
     $(function () {
-
+        var ac_nama_obat = $.map(obat, function (value, key) {
+            return {value: value['nama'], data: value['barcode']};
+        });
         $('#total_bayar').on("keyup change", function () {
             check_bayar();
         });
-
         $('#tb_jml_besar').on("change keyup", function () {
             var jml_besar = $('#tb_jml_besar').val();
             var t = document.getElementById("cb_nama_obat");
             var val_obat = t.options[t.selectedIndex].value;
-
             if (check_number(jml_besar))
             {
                 var jml_kecil = search_by(obat, 'id_data_obat', val_obat, 'jumlah_satuan_kecil') * jml_besar;
@@ -782,12 +756,10 @@ $inputClass = "col-sm-9";
             }
             check_input();
         });
-
         $('#tb_jml_kecil').on("change keyup", function () {
             var jml_kecil = $('#tb_jml_kecil').val();
             var t = document.getElementById("cb_nama_obat");
             var val_obat = t.options[t.selectedIndex].value;
-
             if (!check_number(jml_kecil))
             {
                 jml_kecil = '';
@@ -801,10 +773,8 @@ $inputClass = "col-sm-9";
             }
             check_input();
         });
-
         $('#tb_harga_dasar_satuan').on("change keyup", function () {
             var harga_dasar = $('#tb_harga_dasar_satuan').val();
-
             if (!check_number(harga_dasar))
             {
                 harga_dasar = '';
@@ -816,7 +786,6 @@ $inputClass = "col-sm-9";
                 $('#tb_harga_jual_ppn').val(harga_jual);
             }
         });
-
         $(document).on("change keyup", "#tb_harga_beli, #tb_discount", function () {
             var harga_beli = $('#tb_harga_beli').val();
             var jml_kecil = $('#tb_jml_kecil').val();
@@ -840,10 +809,6 @@ $inputClass = "col-sm-9";
 
             check_input();
         });
-
-
-
-
         $('#tb_kode_obat').on("keyup", function () {
             if ($('#tb_kode_obat').val() != '')
             {
@@ -863,9 +828,7 @@ $inputClass = "col-sm-9";
             }
 
             check_input();
-
         });
-
         $('#cb_nama_obat').on("click", function () {
 
             var t = document.getElementById("cb_nama_obat");
@@ -891,16 +854,37 @@ $inputClass = "col-sm-9";
             }
 
             check_input();
-
         });
-
-
-
+        $('#tb_new_nama_obat').autocomplete({
+            lookup: ac_nama_obat,
+            lookupFilter: function (suggestion, originalQuery, queryLowerCase) {
+                var re = new RegExp('\\b' + $.Autocomplete.utils.escapeRegExChars(queryLowerCase), 'gi');
+                return re.test(suggestion.value);
+            },
+            onSelect: function (suggestion) {
+                $('#selction-ajax').html('You selected: ' + suggestion.value + ', ' + suggestion.data);
+            },
+            onInvalidateSelection: function () {
+                $('#selction-ajax').html('You selected: none');
+            }
+        });
+        $('#cb_nama_obat').autocomplete({
+            lookup: ac_nama_obat,
+            lookupFilter: function (suggestion, originalQuery, queryLowerCase) {
+                var re = new RegExp('\\b' + $.Autocomplete.utils.escapeRegExChars(queryLowerCase), 'gi');
+                return re.test(suggestion.value);
+            },
+            onSelect: function (suggestion) {
+                $('#selction-ajax').html('You selected: ' + suggestion.value + ', ' + suggestion.data);
+            },
+            onInvalidateSelection: function () {
+                $('#selction-ajax').html('You selected: none');
+            }
+        });
         $('#btn_bayar').on("click", function () {
 
             get_grand_total();
             var struk = "";
-
             var ar_isi_data = $("#isi_data").getIdArray();
             var ar_total = new Array();
             var temp = new Array();
@@ -912,7 +896,6 @@ $inputClass = "col-sm-9";
                 {
                     temp = ar_isi_data[i].split('_');
                     ar_total[x] = temp[1];
-
                     x++;
                 }
 
@@ -934,12 +917,9 @@ $inputClass = "col-sm-9";
             $('#txt_print_preview').val(struk);
             $('#btn_print').focus();
             $('#mod_print_preview').modal("show");
-
         });
-
         $('#btn_print').on("click", function () {
             var struk = "";
-
             var ar_isi_data = $("#isi_data").getIdArray();
             var ar_total = new Array();
             var temp = new Array();
@@ -951,7 +931,6 @@ $inputClass = "col-sm-9";
                 {
                     temp = ar_isi_data[i].split('_');
                     ar_total[x] = temp[1];
-
                     x++;
                 }
 
@@ -961,13 +940,11 @@ $inputClass = "col-sm-9";
 
             var t = document.getElementById("sts_trx");
             var pembeli = t.options[t.selectedIndex].text;
-
             //console.log(pembeli);
             if (pembeli == "Umum")
                 pembeli = '1';
             else
                 pembeli = '2';
-
             struk += $('#id_trx').text() + ";";
             struk += pembeli + ";";
             struk += x + ";";
@@ -982,60 +959,42 @@ $inputClass = "col-sm-9";
             struk += toRp($('#total_bayar').val()) + ";";
             struk += $('#kembali_uang').text() + ";";
             struk = struk.trim();
-
             $('#loading').show();
             $.post("mod/action.php", {request: "<?php echo $objEnkrip->encode('transaksi'); ?>", data: struk})
                     .done(function (result) {
                         console.log("Status : " + result);
-
                     });
             end_transaksi();
-
             $('#loading').hide();
             $('#mod_print_preview').modal("hide");
-
         });
-
         $('#btn_new_transaksi').on("click", function () {
             new_transaksi();
         });
-
         $('#btn_tambah_data_obat').on("click", function () {
             $('#mod_data_obat').modal("show");
         });
-
         $('#btn_cancel_transaksi').on("click", function () {
             end_transaksi();
         });
-
         $('#btn_tambah_obat').on("click", function () {
             add_obat();
         });
     });
-
-
 //FUNGSI STANDARD
-    function updateClock( )
+    function updateClock()
     {
-        var currentTime = new Date( );
-        var currentHours = currentTime.getHours( );
-        var currentMinutes = currentTime.getMinutes( );
-        var currentSeconds = currentTime.getSeconds( );
-
+        var currentTime = new Date();
+        var currentHours = currentTime.getHours();
+        var currentMinutes = currentTime.getMinutes();
+        var currentSeconds = currentTime.getSeconds();
         currentMinutes = (currentMinutes < 10 ? "0" : "") + currentMinutes;
         currentSeconds = (currentSeconds < 10 ? "0" : "") + currentSeconds;
-
         var timeOfDay = (currentHours < 12) ? "AM" : "PM";
-
         currentHours = (currentHours > 12) ? currentHours - 12 : currentHours;
-
         currentHours = (currentHours == 0) ? 12 : currentHours;
-
         var currentTimeString = currentHours + ":" + currentMinutes + ":" + currentSeconds + " " + timeOfDay;
-
-
         $("#datetime").html(currentTimeString);
-
     }
 
     $(document).ready(function ()
