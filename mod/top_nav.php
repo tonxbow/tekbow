@@ -119,5 +119,21 @@ function createFileName($filename) {
         </ul>
 
     </div>
+    
+    <div class="top-nav clearfix">
+        <ul class="nav pull-right top-menu">
+            <li class="dropdown">
+                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                    
+                    <span class="username"><?php echo $username; ?></span>
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu extended logout">
+                    <li><a href="index.php?ask=<?php echo $objEnkrip->encode('ubahpass.php'); ?>"><i class=" fa fa-suitcase"></i> Ubah Password</li>               
+                    <li><a href="login.php?ask=logout"><i class="fa fa-key"></i> Log Out</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
 </header>
 
