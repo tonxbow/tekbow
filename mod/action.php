@@ -23,12 +23,12 @@ switch ($request) {
             case 'obat_masuk':
                 $idtransaksi = array("id_transaksi" => $objFunction->createID('barang_masuk', 'id_barang_masuk', 'bm.' . $objFunction->get_date(), 5, 99999));
                 break;
-            default : $idtransaksi  = array("id_transaksi" => '-');
+            default : $idtransaksi = array("id_transaksi" => '-');
         }
         echo json_encode($idtransaksi);
         break;
     case 'get_data_obat':
-        $data_obat = $db->get_data($db, 'data_obat', '*', '', '', '');
+        $data_obat = $db->get_data($db, 'data_obat', '*', '', 'nama ASC', '');
         $data = json_encode($data_obat, JSON_PRETTY_PRINT);
         echo $data;
         break;
@@ -147,6 +147,38 @@ switch ($request) {
         //$file = '../struk/2015/07/16/trx.20150716.03164.txt';
         $data = file_get_contents($file);
         echo $data;
+        break;
+    case 'add_data_obat' :
+        $data = $_REQUEST['data'];
+        //echo ($data);
+        $ar_data = explode(';', $data);
+
+        $data_obat['id_data_obat'] = $objFunction->createID('data_obat', 'id_data_obat', 'obt', 5, 99999);
+        $data_obat['barcode'] = $ar_data[0];
+        $data_obat['nama'] = $ar_data[1];
+        $data_obat['satuan_besar'] = $objEnkrip->decode($ar_data[2]);
+        $data_obat['jumlah_satuan_kecil'] = $ar_data[3];
+        $data_obat['satuan_kecil'] = $objEnkrip->decode($ar_data[4]);
+        $data_obat['harga_dasar'] = $ar_data[5];
+        $data_obat['harga_jual'] = $ar_data[6];
+        $data_obat['id_group_obat'] = $objEnkrip->decode($ar_data[7]);
+        $data_obat['id_jenis_obat'] = $objEnkrip->decode($ar_data[8]);
+        $data_obat['id_type_obat'] = $objEnkrip->decode($ar_data[9]);
+        //print_r($data_obat);
+        if ($db->add_data($db, 'data_obat', $data_obat))
+            echo 'success';
+        else
+            echo 'fail';
+        break;
+    case 'update_data_obat' : 
+        $id_obat = trim($_REQUEST['id_obat']);
+        $data_obat['harga_dasar'] = trim($_REQUEST['harga']);
+        echo $id_obat;
+        if ($db->update_data($db, 'data_obat', $data_obat,"id_data_obat = '$id_obat'"))
+            echo 'success';
+        else
+            echo 'fail';
+        
         break;
 }
 ?>

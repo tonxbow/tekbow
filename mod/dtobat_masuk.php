@@ -206,7 +206,7 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
                     <tr>
                         <th  colspan="2" style="width: 300px; white-space: nowrap;"><div style="font-size: 20px;" id="total_item">Total Item : 0</div></th>
                 <th  colspan="3" style="width: 50%; vertical-align: middle; text-align: left;"><i class="fa fa-file"></i> id transaksi : <b id="id_trx"></b></th>
-                <th  colspan="3" style="width: 50%; vertical-align: middle; text-align: left;"><div style="font-size: 15px" >Grand Total : <b id="grand_total">Rp. 0</b></div></th>
+                <th  colspan="3" style="width: 50%; vertical-align: middle; text-align: left;"><div style="font-size: 15px; color: red;" >Grand Total : <b id="grand_total">Rp. 0</b></div></th>
                 <th  style="width: 250px; white-space: nowrap;"rowspan="2"><div style="font-size: 20px;" id="datetime">-</div></th>
                 </tr>
                 </tfoot>
@@ -232,7 +232,7 @@ $inputClass = "col-sm-9";
                 <h4 class="modal-title">Tambah Data Obat</h4>
             </div>
             <div class="modal-body" style="color:#000;">
-                <form id='form_new_obat' class="form-horizontal" role="form" method="post" action="<?php echo $actionForm; ?>">
+                <div  class="form-horizontal">
                     <div class = "form-group">
                         <label for = "" class = "<?php echo $labelClass; ?>">Kode :</label>
                         <div class = "<?php echo $inputClass; ?>"><input type = "text" name = "kode_obat" class = "form-control" id = "tb_new_kode_obat"></div>
@@ -241,92 +241,125 @@ $inputClass = "col-sm-9";
                         <label for = "" class = "<?php echo $labelClass; ?>">Nama :</label>
                         <!--<div class = "<?php echo $inputClass; ?>"><input type = "text" name = "nama_obat" class = "form-control" id = "tb_new_nama_obat"></div>-->
                         <div class = "<?php echo $inputClass; ?>"><input type="text" name="nama_obat" id="tb_new_nama_obat" class="form-control"/></div>
-
                     </div>
-                    <div class = "form-group">
-                        <label for = "" class = "<?php echo $labelClass; ?>">Group Obat :</label>
-                        <div class = "<?php echo $inputClass; ?>">
-                            <select class="form-control" name="group_obat" id="cb_new_group_obat">
-                                <?php
-                                for ($i = 0; $i < count($group_obat); $i++) {
-                                    echo '<option value = "' . $group_obat[$i]['id_group_obat'] . '">' . $group_obat[$i]['nama'] . '</option>';
-                                }
-                                ?>
-                            </select>
+                    <div id="detail_new_obat">
+                        <div class = "form-group">
+                            <label for = "" class = "<?php echo $labelClass; ?>">Group Obat :</label>
+                            <div class = "<?php echo $inputClass; ?>">
+                                <select class="form-control" name="group_obat" id="cb_new_group_obat">
+                                    <?php
+                                    for ($i = 0; $i < count($group_obat); $i++) {
+                                        echo '<option value = "' . $objEnkrip->encode($group_obat[$i]['id_group_obat']) . '">' . $group_obat[$i]['nama'] . '</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class = "form-group">
+                            <label for = "" class = "<?php echo $labelClass; ?>">Jenis Obat :</label>
+                            <div class = "<?php echo $inputClass; ?>">
+                                <select class="form-control" name="jenis_obat" id="cb_new_jenis_obat">
+                                    <?php
+                                    for ($i = 0; $i < count($jenis_obat); $i++) {
+                                        echo '<option value = "' . $objEnkrip->encode($jenis_obat[$i]['id_jenis_obat']) . '">' . $jenis_obat[$i]['nama'] . '</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class = "form-group">
+                            <label for = "" class = "<?php echo $labelClass; ?>">Type Obat :</label>
+                            <div class = "<?php echo $inputClass; ?>">
+                                <select class="form-control" name="type_obat" id="cb_new_type_obat">
+                                    <?php
+                                    for ($i = 0; $i < count($type_obat); $i++) {
+                                        echo '<option value = "' . $objEnkrip->encode($type_obat[$i]['id_type_obat']) . '">' . $type_obat[$i]['nama'] . '</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class = "form-group">
+                            <label for = "" class = "col-sm-offset-2 lbl col-sm-1 text-right">Satu </label>
+                            <div class = "col-sm-3">
+                                <select class="form-control" name="satuan_besar_obat" id="cb_new_satuan_besar_obat">
+                                    <?php
+                                    for ($i = 0; $i < count($satuan); $i++) {
+                                        echo '<option value = "' . $objEnkrip->encode($satuan[$i]['id_satuan']) . '">' . $satuan[$i]['nama'] . '</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <label for = "" class = "lbl col-sm-1 text-right">Berisi </label>
+                            <div class = "col-sm-2"><input min="0" type = "number" name = "jumlah_satuan" class = "form-control" id = "tb_new_jumlah_satuan"></div>
+                            <div class = "col-sm-3">
+                                <select class="form-control" name="satuan_kecil_obat" id="cb_new_satuan_kecil_obat">
+                                    <?php
+                                    for ($i = 0; $i < count($satuan); $i++) {
+                                        echo '<option value = "' . $objEnkrip->encode($satuan[$i]['id_satuan']) . '">' . $satuan[$i]['nama'] . '</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class = "form-group">
+                            <label for = "" class = "lbl text-right col-sm-3">Harga Beli:</label>
+                            <div class = "col-sm-3"><input min="0" type = "number" name = "harga_beli" class = "form-control" id = "tb_new_harga_beli" value="0"></div>
+                            <label for = "" class = "lbl text-right col-sm-3">Harga Dasar:</label>
+                            <div class = "col-sm-3"><input min="0"  type = "number" name = "harga_jual" class = "form-control" id = "tb_new_harga_jual" value="0"></div>
                         </div>
                     </div>
                     <div class = "form-group">
-                        <label for = "" class = "<?php echo $labelClass; ?>">Jenis Obat :</label>
-                        <div class = "<?php echo $inputClass; ?>">
-                            <select class="form-control" name="jenis_obat" id="cb_new_jenis_obat">
-                                <?php
-                                for ($i = 0; $i < count($jenis_obat); $i++) {
-                                    echo '<option value = "' . $jenis_obat[$i]['id_jenis_obat'] . '">' . $jenis_obat[$i]['nama'] . '</option>';
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class = "form-group">
-                        <label for = "" class = "<?php echo $labelClass; ?>">Type Obat :</label>
-                        <div class = "<?php echo $inputClass; ?>">
-                            <select class="form-control" name="type_obat" id="cb_new_type_obat">
-                                <?php
-                                for ($i = 0; $i < count($type_obat); $i++) {
-                                    echo '<option value = "' . $type_obat[$i]['id_type_obat'] . '">' . $type_obat[$i]['nama'] . '</option>';
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class = "form-group">
-                        <label for = "" class = "col-sm-offset-2 lbl col-sm-1 text-right">Satu </label>
-                        <div class = "col-sm-3">
-                            <select class="form-control" name="satuan_besar_obat" id="cb_new_satuan_besar_obat">
-                                <?php
-                                for ($i = 0; $i < count($satuan); $i++) {
-                                    echo '<option value = "' . $satuan[$i]['id_satuan'] . '">' . $satuan[$i]['nama'] . '</option>';
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        <label for = "" class = "lbl col-sm-1 text-right">Berisi </label>
-                        <div class = "col-sm-2"><input type = "text" name = "jumlah_satuan" class = "form-control" id = "tb_jumlah_satuan"></div>
-                        <div class = "col-sm-3">
-                            <select class="form-control" name="satuan_kecil_obat" id="cb_new_satuan_kecil_obat">
-                                <?php
-                                for ($i = 0; $i < count($satuan); $i++) {
-                                    echo '<option value = "' . $satuan[$i]['id_satuan'] . '">' . $satuan[$i]['nama'] . '</option>';
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class = "form-group">
-                        <label for = "" class = "lbl text-right col-sm-3">Harga Beli:</label>
-                        <div class = "col-sm-3"><input type = "text" name = "harga_beli" class = "form-control" id = "tb_new_harga_beli"></div>
-                        <label for = "" class = "lbl text-right col-sm-3">Harga Dasar:</label>
-                        <div class = "col-sm-3"><input type = "text" name = "harga_jual" class = "form-control" id = "tb_new_harga_jual"></div>
-                    </div>
-                    <div class = "form-group">
-
+                        <p style="font-size: 15px; color: red; text-align: center;" id="txt_new_keterangan"></p>
                     </div>
 
                     <div class="form-group">
                         <div class="col-sm-offset-1 col-sm-5 text-right">
-                            <button type="submit" class="btn btn-primary btn-block">Simpan</button>
+                            <button class="btn btn-primary btn-block" id="btn_new_simpan">Simpan</button>
 
                         </div>
                         <div class="col-sm-offset-1 col-sm-5 text-right">
                             <button data-dismiss="modal" class="btn btn-danger btn-block" type="button">Batal</button>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>    
 
         </div>
     </div>
     <div id="loading" style="width: 100%; text-align: center; position: fixed;z-index: 999; top: 40%;"><img src="images/loading.gif" style="width: 150px;"></div>
+</div>
+
+<div class="modal fade" id="mod_konfirmasi" tabindex="-1" role="dialog" aria-hidden="true" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #428bca; color: #fff;">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Konfirmasi</h4>
+            </div>
+            <div class="modal-body" style="color:#000;">
+                <div  class="form-horizontal">
+                    <div class = "form-group">
+                        <div id="txt_id_obat_ubah" style="display: none"></div>
+                        <div id="txt_harga_ubah" style="display: none"></div>
+                        <div id="txt_data_append" style="display: none"></div>
+                        <p style="font-size: 15px; color: #000; text-align: center;" id="txt_mod_konfirmasi"></p>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-1 col-sm-5 text-right">
+                            <button class="btn btn-primary btn-block" id="btn_mod_konfirmasi_ok">OK</button>
+
+                        </div>
+                        <div class="col-sm-offset-1 col-sm-5 text-right">
+                            <button data-dismiss="modal" class="btn btn-danger btn-block" type="button">Batal</button>
+                        </div>
+                    </div>
+                </div>
+            </div>    
+
+        </div>
+    </div>
+
 </div>
 
 
@@ -335,6 +368,12 @@ $inputClass = "col-sm-9";
 //INISALISASI AWAL
     var obat = <?php echo json_encode($data_obat, JSON_PRETTY_PRINT) ?>;
     var satuan = <?php echo json_encode($satuan, JSON_PRETTY_PRINT) ?>;
+    var ac_nama_obat = $.map(obat, function (value, key) {
+        return {value: value['nama'], data: value['barcode']};
+    });
+    var ac_kode_obat = $.map(obat, function (value, key) {
+        return {value: value['barcode'], data: value['nama']};
+    });
     $('#tgl_trx').datetimepicker({
         format: 'Y-m-d',
         timepicker: false
@@ -344,12 +383,12 @@ $inputClass = "col-sm-9";
         timepicker: false
     });
     input_hide();
+    input_new_false("");
     $('#view_pos').hide();
     $('#btn_bayar').hide();
     $('#loading').hide();
-    $('#btn_cancel_transaksi').hide();
-    //$('#cb_nama_obat').select2();
-//SHORTCUT KEYBOARD
+    $('#btn_cancel_transaksi').hide();             //$('#cb_nama_obat').select2();
+    //SHORTCUT KEYBOARD
     document.addEventListener('keydown', function (e) {
         switch (e.keyCode)
         {
@@ -372,7 +411,8 @@ $inputClass = "col-sm-9";
                 break;
         }
     });
-//FUNGSI UMUM
+
+    //FUNGSI UMUM
     function toRp(a, b, c, d, e) {
         e = function (f) {
             return f.split('').reverse().join('')
@@ -386,7 +426,6 @@ $inputClass = "col-sm-9";
         }
         return'Rp. ' + e(d);
     }
-
     function search_by(dtArray, field_by, field_content, field_search) {
         var result = '';
         var i;
@@ -398,10 +437,9 @@ $inputClass = "col-sm-9";
 
         return result;
     }
-
     function get_date() {
         var currentTime = new Date();
-        //console.log(currentTime);
+        //console.log(currentTime);            
         var Month = currentTime.getMonth();
         var Datez = currentTime.getDate().toString();
         Month += 1;
@@ -413,7 +451,6 @@ $inputClass = "col-sm-9";
             Month = '0' + Datez;
         return currentTime.getFullYear() + '-' + Month + '-' + Datez;
     }
-
     jQuery.fn.getIdArray = function () {
         var ret = [];
         $('[id]', this).each(function () {
@@ -422,9 +459,7 @@ $inputClass = "col-sm-9";
         return ret;
     };
 //FUNGSI KHUSUS
-
-    function input_hide()
-    {
+    function input_hide() {
         $('#btn_tambah_obat').hide();
         $('#keterangan_obat').slideUp("slow");
     }
@@ -448,6 +483,13 @@ $inputClass = "col-sm-9";
         $("#tb_discount").val('');
         $('#btn_tambah_obat').slideUp();
         $('#btn_tambah_data_obat').slideDown();
+
+        $("#tb_new_harga_beli").val('');
+        $("#tb_new_harga_jual").val('');
+        $("#tb_new_kode_obat").val('');
+        $("#tb_new_nama_obat").val('');
+        $("#tb_new_jumlah_satuan").val('');
+        $("#btn_new_simpan").slideUp();
     }
 
     function check_input()
@@ -471,12 +513,28 @@ $inputClass = "col-sm-9";
 
             $('#btn_tambah_obat').slideUp();
         }
-
         if (nama == '')
             $('#btn_tambah_data_obat').slideDown();
         else
             $('#btn_tambah_data_obat').slideUp();
         return ret;
+    }
+
+    function input_new_true()
+    {
+        if ($('#tb_new_kode_obat').val() != '' && $('#tb_new_nama_obat').val() != '')
+        {
+            $('#txt_new_keterangan').text("");
+            //$('#detail_new_obat').slideDown();
+            $('#btn_new_simpan').slideDown();
+        }
+    }
+
+    function input_new_false(pesan)
+    {
+        $('#txt_new_keterangan').text(pesan);
+        //$('#detail_new_obat').slideUp();
+        $('#btn_new_simpan').slideUp();
     }
 
     function remove_row(id)
@@ -489,7 +547,6 @@ $inputClass = "col-sm-9";
     {
         $('#txt_keterangan').text(teks);
     }
-
     function ubah_jumlah(id)
     {
         var jumlah = $('#jml_' + id).val();
@@ -537,10 +594,8 @@ $inputClass = "col-sm-9";
                 ar_total[x] = ar_isi_data[i];
                 x++;
             }
-
         }
-        //console.log(ar_total);
-        $('#total_item').text("Total Item : " + ar_total.length);
+        //console.log(ar_total);     $('#total_item').text("Total Item : " + ar_total.length);
         for (i = 0; i < ar_total.length; i++)
         {
             subtotal = parseInt($('#' + ar_total[i]).text().replace(/[Rp`~!@#$%^&*()_| +\-=?;:'",.<>\{\}\[\]\\\/]/gi, ''));
@@ -586,7 +641,75 @@ $inputClass = "col-sm-9";
                     obat = result;
                 });
         $('#tb_kode_obat').focus();
+//console.log("Obat : \n");
+        //      console.log(obat);             
+        ac_nama_obat = $.map(obat, function (value, key) {
+            return {value: value['nama'], data: value['barcode']};
+        });
+        ac_kode_obat = $.map(obat, function (value, key) {
+            return {value: value['barcode'], data: value['nama']};
+        });
+        $('#mod_data_obat').modal("hide");
+        //console.log("acc : \n" );
+        // console.log(ac_nama_obat);
+
+        $('#tb_kode_obat').autocomplete({
+            lookup: ac_kode_obat,
+            lookupFilter: function (suggestion, originalQuery, queryLowerCase) {
+                var re = new RegExp('\\b' + $.Autocomplete.utils.escapeRegExChars(queryLowerCase), 'gi');
+                return re.test(suggestion.value);
+            },
+            onSelect: function (suggestion) {
+                $("#cb_nama_obat").val(search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'nama'));
+                $("#tb_satuan_jml_besar").val(search_by(satuan, 'id_satuan', search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'satuan_besar'), 'nama')).change();
+                $("#tb_satuan_jml_kecil").val(search_by(satuan, 'id_satuan', search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'satuan_kecil'), 'nama')).change();
+                $("#tb_harga_beli_satuan").val(search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'harga_dasar')).change();
+                $("#tb_harga_jual_ppn").val(search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'harga_jual')).change();
+                var harga_jual = $("#tb_harga_jual_ppn").val();
+                $("#tb_harga_dasar_satuan").val(Math.round(harga_jual / 1.1));
+                if ($("#cb_kode_obat").val() != '')
+                    input_show();
+                check_input();
+            },
+            onInvalidateSelection: function () {
+                reset_pos();
+                input_hide();
+                check_input();
+            }
+        });
+
+        $('#cb_nama_obat').autocomplete({
+            lookup: ac_nama_obat,
+            lookupFilter: function (suggestion, originalQuery, queryLowerCase) {
+                var re = new RegExp('\\b' + $.Autocomplete.utils.escapeRegExChars(queryLowerCase), 'gi');
+                return re.test(suggestion.value);
+            },
+            onSelect: function (suggestion) {
+                var val_obat = search_by(obat, 'nama', $('#cb_nama_obat').val(), 'id_data_obat');
+                if (val_obat != 0)
+                {
+                    $("#tb_kode_obat").val(search_by(obat, 'id_data_obat', val_obat, 'barcode'));
+                    $("#tb_satuan_jml_besar").val(search_by(satuan, 'id_satuan', search_by(obat, 'id_data_obat', val_obat, 'satuan_besar'), 'nama'));
+                    $("#tb_satuan_jml_kecil").val(search_by(satuan, 'id_satuan', search_by(obat, 'id_data_obat', val_obat, 'satuan_kecil'), 'nama'));
+                    $("#tb_harga_beli_satuan").val(search_by(obat, 'id_data_obat', val_obat, 'harga_dasar'));
+                    $("#tb_harga_jual_ppn").val(search_by(obat, 'id_data_obat', val_obat, 'harga_jual'));
+                    var harga_jual = $("#tb_harga_jual_ppn").val();
+                    $("#tb_harga_dasar_satuan").val(Math.round(harga_jual / 1.1));
+                    //harga jual = harga beli + (harga beli * 0.1)
+                    // y = x + (x*0.1), y = 0.1x + x, y = 1,1x, x = y/1.1
+                    input_show();
+                }
+                check_input();
+            },
+            onInvalidateSelection: function () {
+                reset_pos();
+                input_hide();
+                check_input();
+            }
+        });
+
     }
+
 
     function end_transaksi()
     {
@@ -643,6 +766,11 @@ $inputClass = "col-sm-9";
         return str.replace(/[Rp`~!@#$%^&*()_| +\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
     }
 
+    function check_string(str)
+    {
+        return str.replace(/[`~!@#$%^&*()_|+\-=?;:'",<>\{\}\[\]\\\/]/gi, '');
+    }
+
     function check_number(val_id)
     {
         var ret = true;
@@ -685,13 +813,36 @@ $inputClass = "col-sm-9";
 
         return ret;
     }
-
     function add_jumlah(id, jumlah)
     {
         var jml = parseInt($('#jml_' + id).val()) + parseInt(jumlah);
         $('#jml_' + id).val(jml);
         ubah_jumlah(id);
     }
+
+    $('#btn_mod_konfirmasi_ok').on("click", function () {
+
+        var id_obat = check_string($('#txt_id_obat_ubah').text());
+        var harga_obat = check_string($('#txt_harga_ubah').text());
+        
+        $.post("mod/action.php", {request: "<?php echo $objEnkrip->encode('update_data_obat'); ?>", id_obat: id_obat, harga: harga_obat})
+                .done(function (result) {
+                    if (result == "fail")
+                        alert("Perubahan Gagal, Keterangan : \n\n " + result);
+                    else
+                    {
+                        $('#isi_data').append($('#txt_data_append').text());
+                        $('#mod_konfirmasi').modal("hide");
+                        $('#txt_data_append').text();
+                        get_grand_total();
+                        input_hide();
+                        reset_pos();
+                    }
+
+                });
+
+
+    });
 
     function add_obat()
     {
@@ -702,35 +853,141 @@ $inputClass = "col-sm-9";
         var jumlah = $('#tb_jml_kecil').val();
         var harga = $('#tb_harga_beli').val();
         var expire = $('#tb_exp_date').val();
+        var harga_satuan = $('#tb_harga_jual_satuan').val();
+        var harga_sebelum = $('#tb_harga_beli_satuan').val();
         var count = parseInt($('#isi_data tr').length) + 1;
+        var status = 0;
         //var id_barcode = search_barcode(kode);
 
         //console.log(id_barcode);
-
-
-        $('#isi_data').append(
-                '<tr id="row_' + count + '"><td style = "width: 45px; vertical-align:middle;" class = "text-center"> <button onclick="remove_row(' + count + ')"> <i class = "fa fa-trash-o"> </i></button> </td>' +
-                '<td id="id_' + count + '" type="hidden" style="display:none;"> ' + id_obat + ' </td>' +
+        var data_append = '<tr id="row_' + count + '"><td style = "width: 45px; vertical-align:middle;" class = "text-center"> <button onclick="remove_row(' + count + ')"> <i class = "fa fa-trash-o"> </i></button> </td>' + '<td id="id_' + count + '" type="hidden" style="display:none;"> ' + id_obat + ' </td>' +
                 '<td id="nama_' + count + '" style = "width: 350px; font-size:12px; vertical-align:middle;"> ' + nama + ' </td>' +
                 '<td id="kode_' + count + '" style = "width: 150px; font-size:13px; vertical-align:middle;"> ' + kode + ' </td>' +
                 '<td id="expire_' + count + '" style = "width: 80px; font-size:13px;" class = "text-center">' + expire + '</td>' +
                 '<td id="jumlah_' + count + '" style = "width: 50px; font-size:13px;" class = "text-center">' + jumlah + '</td>' +
                 '<td id="satuan_' + count + '" style = "width: 120px; font-size:13px; vertical-align:middle;"> ' + satuan + ' </td>' +
-                '<td id="harga_' + count + '" style = "width: 120px; font-size:15px; vertical-align:middle;"> ' + toRp(harga) + ' </td></tr>'
-                );
-        get_grand_total();
-        input_hide();
-        reset_pos();
+                '<td id="harga_' + count + '" style = "width: 120px; font-size:15px; vertical-align:middle;"> ' + toRp(harga) + ' </td></tr>';
+
+        if (harga_satuan != harga_sebelum)
+        {
+            $('#txt_id_obat_ubah').text(id_obat);
+            $('#txt_mod_konfirmasi').text(
+                    "Harga Obat Mengalami Perubahan, Harga Obat Sebelum " + toRp(harga_sebelum) + "/" + satuan + " Harga Obat Sekarang " + toRp(harga_satuan) + "/" + satuan +
+                    " ,Apakah Anda Akan Memperbaharui Database Harga Obat?"
+                    );
+            $('#mod_konfirmasi').modal("show");
+            $('#txt_data_append').text(data_append);
+            $('#txt_harga_ubah').text(harga_satuan);
+            status = 1;
+        }
+
+        if (status != 1)
+        {
+            var i;
+
+            for (i = 0; i < obat.length; i++)
+            {
+                if (obat[i]['nama'] == nama)
+                {
+                    status = 2;
+                    i = obat.length + 1;
+                }
+            }
+        }
+
+        if (status == 2)
+        {
+            $('#isi_data').append(data_append);
+            get_grand_total();
+            input_hide();
+            reset_pos();
+        }
+        else if (status == 0)
+        {
+            set_notifikasi("Nama Obat Tidak Ada");
+            $('#cb_nama_obat').focus();
+        }
+
     }
 
-//FUNGSI EVENT
+    function input_new_check(action)
+    {
+        var kode = $('#tb_new_kode_obat').val();
+        var nama = $('#tb_new_nama_obat').val();
+        var isi = $('#tb_new_jumlah_satuan').val();
+        var harga_beli = $('#tb_new_harga_beli').val();
+        var harga_jual = $('#tb_new_harga_jual').val();
+        var status = true;
+        $('#txt_new_keterangan').text("");
+        //console.log(kode);
+        //console.log(nama);
+
+        if (kode == "")
+        {
+            //input_new_false("Kode Harus Diisi !");
+            input_new_false("Kode Harus Diisi");
+            $('#tb_new_kode_obat').focus();
+            status = false;
+        }
+
+        else if (nama == "")
+        {
+            //input_new_false("Nama Harus Diisi !");
+            input_new_false("Nama Harus Diisi Dengan Benar");
+            $('#tb_new_nama_obat').focus();
+            status = false;
+        }
+
+        else if (!check_number(isi))
+        {
+            input_new_false("Jumlah Harus Diisi Dengan Benar!");
+            $('#tb_new_jumlah_satuan').focus();
+            status = false;
+        }
+
+
+        else if (!check_number(harga_beli))
+        {
+            input_new_false("Harga Harus Diisi Dengan Benar!");
+            $('#tb_new_harga_beli').focus();
+            status = false;
+        }
+
+        else if (!check_number(harga_jual))
+        {
+            input_new_false("Harga Harus Diisi Dengan Benar!");
+            $('#tb_new_harga_jual').focus();
+            status = false;
+        }
+
+
+        if (action == 1)
+        {
+            var i;
+            for (i = 0; i < obat.length; i++)
+            {
+                if (obat[i]['nama'] == nama)
+                {
+                    input_new_false("Nama Obat Sudah Ada !");
+                    status = false;
+                }
+                if (obat[i]['barcode'] == kode)
+                {
+                    input_new_false("Kode Obat Sudah Ada !");
+                    status = false;
+                }
+            }
+        }
+
+        if (status)
+            $('#btn_new_simpan').slideDown();
+        return status
+    }
+
+
+    //FUNGSI EVENT
     $(function () {
-        var ac_nama_obat = $.map(obat, function (value, key) {
-            return {value: value['nama'], data: value['barcode']};
-        });
-        var ac_kode_obat = $.map(obat, function (value, key) {
-            return {value: value['barcode'], data: value['nama']};
-        });
+
         $('#total_bayar').on("keyup change", function () {
             check_bayar();
         });
@@ -794,104 +1051,42 @@ $inputClass = "col-sm-9";
                     diskon = '';
                     $('#tb_discount').val(diskon);
                 }
-
                 var harga_beli_satuan = Math.round((harga_beli - (harga_beli * diskon / 100)) / jml_kecil);
                 $('#tb_harga_jual_satuan').val(harga_beli_satuan);
             }
 
             check_input();
         });
-        /*
-        $('#tb_kode_obat').on("keyup", function () {
-            if ($('#tb_kode_obat').val() != '')
+        $(document).on("change keyup", "#tb_new_jumlah_satuan, #tb_new_harga_beli, #tb_new_harga_jual", function () {
+            input_new_check();
+        });
+        $('#btn_new_simpan').on('click', function () {
+            if (input_new_check('1'))
             {
-                $("#cb_nama_obat").val(search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'id_data_obat')).change();
-                $("#tb_satuan_jml_besar").val(search_by(satuan, 'id_satuan', search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'satuan_besar'), 'nama')).change();
-                $("#tb_satuan_jml_kecil").val(search_by(satuan, 'id_satuan', search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'satuan_kecil'), 'nama')).change();
-                $("#tb_harga_beli_satuan").val(search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'harga_dasar')).change();
-                $("#tb_harga_jual_ppn").val(search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'harga_jual')).change();
-                var harga_jual = $("#tb_harga_jual_ppn").val();
-                $("#tb_harga_dasar_satuan").val(Math.round(harga_jual / 1.1));
-                if ($("#cb_kode_obat").val() != 0)
-                    input_show();
-            }
-            else
-            {
-                input_hide();
-            }
-
-            check_input();
-        });*/
-        
-        $('#tb_new_nama_obat').autocomplete({
-            lookup: ac_nama_obat,
-            lookupFilter: function (suggestion, originalQuery, queryLowerCase) {
-                var re = new RegExp('\\b' + $.Autocomplete.utils.escapeRegExChars(queryLowerCase), 'gi');
-                return re.test(suggestion.value);
-            },
-            onSelect: function (suggestion) {
-                $('#selction-ajax').html('You selected: ' + suggestion.value + ', ' + suggestion.data);
-            },
-            onInvalidateSelection: function () {
-                $('#selction-ajax').html('You selected: none');
+                var kode = check_string($('#tb_new_kode_obat').val());
+                var nama = check_string($('#tb_new_nama_obat').val());
+                var satuan_besar = $('#cb_new_satuan_besar_obat').val();
+                var isi = check_string($('#tb_new_jumlah_satuan').val());
+                var satuan_kecil = $('#cb_new_satuan_kecil_obat').val();
+                var harga_beli = check_string($('#tb_new_harga_beli').val());
+                var harga_jual = check_string($('#tb_new_harga_jual').val());
+                var group = $('#cb_new_group_obat').val();
+                var jenis = $('#cb_new_jenis_obat').val();
+                var tipe = $('#cb_new_type_obat').val();
+                var data_send = kode + ';' + nama + ';' + satuan_besar + ';' + isi + ';' + satuan_kecil + ';' + harga_beli + ';' + harga_jual + ';' + group + ';' + jenis + ';' + tipe;
+                $.post("mod/action.php", {request: "<?php echo $objEnkrip->encode('add_data_obat'); ?>", data: data_send})
+                        .done(function (result) {
+                            if (result == "fail")
+                                alert("Penyimpanan Gagal, Keterangan : \n\n " + result);
+                            else
+                            {
+                                new_transaksi();
+                                end_transaksi();
+                                reset_pos();
+                            }
+                        });
             }
         });
-        
-        $('#tb_kode_obat').autocomplete({
-            lookup: ac_kode_obat,
-            lookupFilter: function (suggestion, originalQuery, queryLowerCase) {
-                var re = new RegExp('\\b' + $.Autocomplete.utils.escapeRegExChars(queryLowerCase), 'gi');
-                return re.test(suggestion.value);
-            },
-            onSelect: function (suggestion) {
-                $("#cb_nama_obat").val(search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'nama'));
-                $("#tb_satuan_jml_besar").val(search_by(satuan, 'id_satuan', search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'satuan_besar'), 'nama')).change();
-                $("#tb_satuan_jml_kecil").val(search_by(satuan, 'id_satuan', search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'satuan_kecil'), 'nama')).change();
-                $("#tb_harga_beli_satuan").val(search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'harga_dasar')).change();
-                $("#tb_harga_jual_ppn").val(search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'harga_jual')).change();
-                var harga_jual = $("#tb_harga_jual_ppn").val();
-                $("#tb_harga_dasar_satuan").val(Math.round(harga_jual / 1.1));
-                if ($("#cb_kode_obat").val() != '')
-                    input_show();
-                check_input();
-            },
-            onInvalidateSelection: function () {
-                reset_pos();
-                input_hide();
-                check_input();
-            }
-        });
-        
-        $('#cb_nama_obat').autocomplete({
-            lookup: ac_nama_obat,
-            lookupFilter: function (suggestion, originalQuery, queryLowerCase) {
-                var re = new RegExp('\\b' + $.Autocomplete.utils.escapeRegExChars(queryLowerCase), 'gi');
-                return re.test(suggestion.value);
-            },
-            onSelect: function (suggestion) {
-                var val_obat = search_by(obat, 'nama', $('#cb_nama_obat').val(), 'id_data_obat');
-                if (val_obat != 0)
-                {
-                    $("#tb_kode_obat").val(search_by(obat, 'id_data_obat', val_obat, 'barcode'));
-                    $("#tb_satuan_jml_besar").val(search_by(satuan, 'id_satuan', search_by(obat, 'id_data_obat', val_obat, 'satuan_besar'), 'nama'));
-                    $("#tb_satuan_jml_kecil").val(search_by(satuan, 'id_satuan', search_by(obat, 'id_data_obat', val_obat, 'satuan_kecil'), 'nama'));
-                    $("#tb_harga_beli_satuan").val(search_by(obat, 'id_data_obat', val_obat, 'harga_dasar'));
-                    $("#tb_harga_jual_ppn").val(search_by(obat, 'id_data_obat', val_obat, 'harga_jual'));
-                    var harga_jual = $("#tb_harga_jual_ppn").val();
-                    $("#tb_harga_dasar_satuan").val(Math.round(harga_jual / 1.1));
-                    //harga jual = harga beli + (harga beli * 0.1)
-                    // y = x + (x*0.1), y = 0.1x + x, y = 1,1x, x = y/1.1
-                    input_show();
-                }
-                check_input();
-            },
-            onInvalidateSelection: function () {
-                reset_pos();
-                input_hide();
-                check_input();
-            }
-        });
-        
         $('#btn_bayar').on("click", function () {
 
             get_grand_total();
