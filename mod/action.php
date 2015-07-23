@@ -170,15 +170,125 @@ switch ($request) {
         else
             echo 'fail';
         break;
-    case 'update_data_obat' : 
+    case 'update_data_obat' :
         $id_obat = trim($_REQUEST['id_obat']);
-        $data_obat['harga_dasar'] = trim($_REQUEST['harga']);
-        echo $id_obat;
-        if ($db->update_data($db, 'data_obat', $data_obat,"id_data_obat = '$id_obat'"))
+        $ar_harga = explode(';', trim($_REQUEST['harga']));
+        $data_obat['harga_dasar'] = $ar_harga[0];
+        if (isset($ar_harga[1]) && $ar_harga[1] != '')
+            $data_obat['harga_jual'] = $ar_harga[1];
+        //echo $id_obat;
+        if ($db->update_data($db, 'data_obat', $data_obat, "id_data_obat = '$id_obat'"))
             echo 'success';
         else
             echo 'fail';
-        
+
+        break;
+    case 'barang_masuk':
+        $ret = 'success';
+        //DATA HEAD <TONX> DATA BODY <TONX> DATA FOOTER
+
+        $data = $_REQUEST['data'];
+        $ar_data = explode("<TONX>", $data);
+
+        $header = $ar_data[0];
+        $body = $ar_data[1];
+        $footer = $ar_data[2];
+
+        $struk = "";
+        $ar_header = explode(";", $header); //id;tgl;vendor;total_item
+        $ar_body = explode(";", $body); //nama,jumlah,satuan,batch,expire,harga,id_obat
+        $ar_footer = explode(";", $footer); //grand_total
+
+        $id_transaksi = $ar_header[0];
+
+//SAVE table barang_masuk
+        $data_barang_masuk['id_barang_masuk'] = $id_transaksi;
+        $data_barang_masuk['tanggal_pembelian'] = $ar_header[1];
+        $data_barang_masuk['vendor'] = $ar_header[2];
+        $data_barang_masuk['total_barang'] = $ar_header[3];
+        $data_barang_masuk['total_harga'] = str_replace(' ', '', str_replace('Rp', '', str_replace('.', '', trim($ar_footer[0]))));
+        $data_barang_masuk['id_user'] = $_SESSION['id_user'];
+        $data_barang_masuk['penerima'] = trim($ar_footer[1]);
+
+        if (!$db->add_data($db, 'barang_masuk', $data_barang_masuk))
+            $ret = 'fail add transaksi';
+
+        //HEADER
+        $struk .= $printer->PrintHeader();
+        $struk .= "ID Trx  : " . $id_transaksi;
+        $struk .= $printer->PrintEnter();
+        $struk .= "Vendor  : " . $ar_header[2];
+        $struk .= $printer->PrintEnter();
+        $struk .= "Tanggal : " . $ar_header[1];
+        $struk .= $printer->PrintEnter();
+        $struk .= $printer->PrintEnter();
+        $struk .= "------------------------------------------" . "\r\n";
+
+        //BODY
+        $data_detail_transaksi['id_barang_masuk'] = $id_transaksi;
+        for ($i = 0; $i < count($ar_body) - 1; $i++) {
+            $data_body = explode(",", $ar_body[$i]); //nama,jumlah,satuan,batch,expire,harga,id_obat
+
+            $jumlah_masuk = str_replace(' ', '', $data_body[1]);
+            $satuan = str_replace(' ', '', $data_body[2]);
+            $id_data_obat = str_replace(' ', '', $data_body[6]);
+
+            $struk .= trim(substr($data_body[0], 0, 40)) . "\r\n";
+            $struk .= " x" . $jumlah_masuk . "\t" . $satuan . "\t" . str_replace(' ', '', trim($data_body[5])) . "\r\n";
+
+
+            //Save Table Transaksi_detail
+            $data_detail_transaksi['id_barang_masuk_detail'] = $id_transaksi . '.' . $i;
+            $data_detail_transaksi['id_data_obat'] = $id_data_obat;
+            $data_detail_transaksi['jumlah_satuan_kecil'] = $jumlah_masuk;
+            $data_detail_transaksi['batch_number'] = trim($data_body[3]);
+            $data_detail_transaksi['expire_date'] = trim($data_body[4]);
+            $data_detail_transaksi['harga_beli'] = str_replace(' ', '', str_replace('Rp', '', str_replace('.', '', trim($data_body[5]))));
+
+            if (!$db->add_data($db, 'barang_masuk_detail', $data_detail_transaksi))
+                $ret = 'fail add detail transaksi';
+
+            //Tambah Stok
+            $obat = $db->get_data($db, 'data_obat', '*', 'id_data_obat = "' . $id_data_obat . '"', '', '');
+            $obat_masuk = $obat[0]['stock_masuk'];
+            $data_obat['stock_masuk'] = $obat_masuk + $jumlah_masuk;
+            $data_obat['tanggal_terakhir_masuk'] = trim($ar_header[1]);
+            $data_obat['update_at'] = $objFunction->get_datetime_sql();
+            //Update Stock Terjual
+            if (!$db->update_data($db, 'data_obat', $data_obat, 'id_data_obat="' . $id_data_obat . '"'))
+                $ret = 'fail update stock';;
+        }
+
+        $struk .= "-----------------------------------------+" . "\r\n";
+        $struk .= "Total    :" . $ar_footer[0];
+        $struk .= $printer->PrintEnter();
+        $struk .= "Penerima :" . $ar_footer[1];
+        $struk .= $printer->PrintEnter();
+        $struk .= $printer->PrintBar();
+        $struk .= $printer->AlignCenter();
+        $struk .= $objFunction->get_datetime_sql() . "\r\n";
+        $struk .= "Terima Kasih";
+        $struk .= $printer->PrintEnter();
+        $struk .= $printer->PrintEnter();
+        $struk .= $printer->PrintEnter();
+        $struk .= $printer->CutPaper();
+        //echo $struk;
+
+        $folder = '../laporan/barang masuk/' . date('Y') . '/' . date('m') . '/' . date('d') . '/';
+        if (!file_exists($folder)) {
+            mkdir($folder, '0777', true);
+        }
+        //$folder = '';
+        $file = $folder . $id_transaksi . '.txt';
+        $handle = fopen($file, 'w') or $ret = 'fail struk';
+        fwrite($handle, $struk);
+
+        $setting = $db->get_data($db, 'setting', '*', '', '', '');
+        if (isset($_REQUEST['print']) && trim($_REQUEST['print']) == 'ok') {
+            $printer->print_data($setting[0]['port'], $struk);
+        }
+
+        echo $ret;
         break;
 }
 ?>
