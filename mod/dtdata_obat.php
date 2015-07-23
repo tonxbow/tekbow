@@ -11,8 +11,8 @@
  * 1. Seuaikan variable dengan kebutuhan
  * 2. Buat Form
  * 3. Buat Validasi
- * 
- * 
+ *
+ *
  *  VARIABLE
  * *********************************************************** */
 $filename = 'dtdata_obat.php';
@@ -107,7 +107,7 @@ $crt = '';
                                 for ($i = 0; $i < count($dataKolom); $i++) {
                                     echo '<th class="text-center">' . $dataKolom[$i] . '</th>';
                                 }
-                                ?>                                    
+                                ?>
                             </tr>
                         </thead>
 
@@ -142,8 +142,8 @@ $crt = '';
                                         case 'satuan_besar' : echo '<td class="text-center">' . $objFunction->search_by($satuan, 'id_satuan', $ArrayDt[$i][$dataField[$x]], 'nama') . '</td>';
                                             break;
                                         case 'stock' :
-                                            $stock = ($ArrayDt[$i]['stock_masuk'] - $ArrayDt[$i]['stock_keluar']) . ' ' . $satuan_kecil;
-                                            echo '<td class="text-left">' . $stock . '</td>';
+                                            $stock = ($ArrayDt[$i]['stock_masuk'] - $ArrayDt[$i]['stock_keluar']); //. ' ' . $satuan_kecil;
+                                            echo '<td class="text-center">' . $stock . '</td>';
                                             break;
                                         default:
                                             echo '<td class="text-center">' . $ArrayDt[$i][$dataField[$x]] . '</td>';

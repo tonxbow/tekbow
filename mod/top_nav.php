@@ -15,7 +15,7 @@ $authmenu = array(
 $submenu = array(
     array(), //Dashboard
     array(), //Master Stock
-    array(), //Report
+    array('Report Penjualan', 'Report Obat'), //Report
     array('Data Obat', 'User'), //Document
 );
 
@@ -34,7 +34,6 @@ function createFileName($filename) {
     $filename = 'dt' . $filename . '.php';
     return $filename;
 }
-
 ?>
 <!--
 <script type="text/javascript">
@@ -91,9 +90,9 @@ function createFileName($filename) {
 -->
 <header class="header fixed-top clearfix">
     <!--logo start-->
-    <div class="brand" style="width:180px;">
+    <div class="brand" style="width:180px; background-color: #aaa;">
         <a href="#" class="logo">
-            <img style="height:60px;" alt="brand" src="images/brand.png" alt="">
+            <img style="height:50px;" alt="brand" src="images/brand.png" alt="">
         </a>
 
     </div>
@@ -119,17 +118,16 @@ function createFileName($filename) {
         </ul>
 
     </div>
-    
+
     <div class="top-nav clearfix">
         <ul class="nav pull-right top-menu">
             <li class="dropdown">
-                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                    
-                    <span class="username"><?php echo $username; ?></span>
+                <a data-toggle="dropdown" class="dropdown-toggle" href="#"  style="background-color: #eee;">
+                    <span class="username" style="margin: 0 0 20px 20px; color: #000;"><?php echo $username; ?></span>
                     <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu extended logout">
-                    <li><a href="index.php?ask=<?php echo $objEnkrip->encode('ubahpass.php'); ?>"><i class=" fa fa-suitcase"></i> Ubah Password</li>               
+                    <li><a href="index.php?ask=<?php echo $objEnkrip->encode('ubahpass.php'); ?>"><i class=" fa fa-suitcase"></i> Ubah Password</li>
                     <li><a href="login.php?ask=logout"><i class="fa fa-key"></i> Log Out</a></li>
                 </ul>
             </li>

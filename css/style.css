@@ -60,9 +60,9 @@ a,a:hover,a:focus {
 }
 .form-signin h2.form-signin-heading {
     margin:0;
-    padding:35px 15px;
+    padding:15px 15px;
     text-align:center;
-    background:#aec785;
+    background:#fff;
     border-radius:5px 5px 0 0;
     -webkit-border-radius:5px 5px 0 0;
     color:#fff;
@@ -70,7 +70,7 @@ a,a:hover,a:focus {
     text-transform:uppercase;
     font-weight:300;
     font-family:'Open Sans',sans-serif;
-    border-bottom:10px solid #a0b87e;
+    border-bottom:10px solid #eee;
 }
 .form-signin .checkbox {
     margin-bottom:14px;

@@ -36,32 +36,17 @@ if (isset($_GET['ask']) && isset($_GET['ask']) == 'logout') {
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="">
-        <meta name="author" content="ThemeBucket">
         <link rel="shortcut icon" href="images/favicon.png">
         <title>Login</title>
-        <!--Core CSS -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/bootstrap-reset.css" rel="stylesheet">
         <link href="font/css/font-awesome.css" rel="stylesheet" />
-        <!-- Custom styles for this template -->
         <link href="css/style.css" rel="stylesheet">
         <link href="css/style-responsive.css" rel="stylesheet" />
-        <link href="css/custom/resize.css" rel="stylesheet">        
-        <style>
-            body.login-body {
-                border: none !important;
-            }
-
-            .container {
-                margin-left: -50px;
-            }
-        </style>
 
     </head>
     <body class="login-body">
-        <div class="container" style="margin: 0;">
-
+        <div class="col-sm-12">
             <form class="form-signin" action="login.php" method="post">
                 <h2 class="form-signin-heading"><img style="height: 80px;" alt="Logo" src="images/logo.png"></h2>
                 <div class="login-wrap">
@@ -69,10 +54,10 @@ if (isset($_GET['ask']) && isset($_GET['ask']) == 'logout') {
                         <input type="text" name="username" class="form-control" placeholder="Username" autofocus>
                         <input type="password" name="password" class="form-control" placeholder="Password">
                     </div>
-                    <button class="btn btn-lg btn-login btn-block" type="submit">Login</button>
-                </form>
-            </div>
-        
+                    <button class="btn btn-lg btn-danger btn-block" type="submit"><b>Login</b></button>
+                </div>
+            </form>
+        </div>
         <script src="js/jquery.js"></script>
         <script src="js/bootstrap.min.js"></script>
     </body>

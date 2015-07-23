@@ -7,7 +7,7 @@
 
 <?php
 $filename = 'dtreport.php';
-$judul = 'Report';
+$judul = 'Report Penjualan ';
 $stsCetak = true;
 $actionForm = 'mod/act.php?ask=' . $objEnkrip->encode('actreport.php');
 $jenisPesan = '';
@@ -83,7 +83,7 @@ else
                                 for ($i = 0; $i < count($dataKolom); $i++) {
                                     echo '<th class="text-center">' . $dataKolom[$i] . '</th>';
                                 }
-                                ?>                                    
+                                ?>
                             </tr>
                         </thead>
 

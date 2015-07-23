@@ -11,8 +11,6 @@ $setting = $db->get_data($db, 'setting', '*', '', '', '');
 
 
 $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 'jumlah_satuan_kecil', 'harga_jual', 'stock_masuk', 'stock_keluar');
-
-
 ?>
 <style>
     .pos{
@@ -69,7 +67,7 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
     <div class="row pemisah" style="margin-bottom: 30px;">
         <!--
         <div class="col-sm-12" style="margin-bottom: 20px; background-color: #999999">
-           
+
         </div>-->
         <div class="col-sm-3 text-center" style="background-color: #999"> <h4 style="color: #fff;">Point Of Sales</h4></div>
         <div class="col-sm-2 text-right"><label class="lbl">Tanggal Transaksi:</label></div>
@@ -94,16 +92,18 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
 
                     <div class="col-sm-2 text-right"><label class="lbl"><div style="white-space: nowrap;">Nama :</div></label></div>
                     <div class="col-sm-10">
+                        <!--
                         <select type="text" id="nama_obat" class="selection" >
                             <option value="0">-=Pilih Obat=-</option>
-                            <?php
-                            for ($i = 0; $i < count($data_obat); $i++) {
-                                //$sisa_stock = $data_obat[$i]['stock_masuk']-$data_obat[$i]['stock_keluar'];
-                                echo '<option value="' . $data_obat[$i]['id_data_obat'] . '">' . $data_obat[$i]['nama'] . '</option>';
-                            }
-                            ?>
+                        <?php
+                        for ($i = 0; $i < count($data_obat); $i++) {
+                            //$sisa_stock = $data_obat[$i]['stock_masuk']-$data_obat[$i]['stock_keluar'];
+                            echo '<option value="' . $data_obat[$i]['id_data_obat'] . '">' . $data_obat[$i]['nama'] . '</option>';
+                        }
+                        ?>
 
-                        </select>
+                        </select>-->
+                        <input type="text" id="nama_obat" class="form-control" title="Nama Obat">
                     </div>
 
                     <div class="col-sm-12 form-entry"></div>
@@ -238,7 +238,7 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
     $('#btn_bayar').hide();
     $('#loading').hide();
     $('#btn_cancel_transaksi').hide();
-    $('#nama_obat').select2();
+    //$('#nama_obat').select2();
 
 //SHORTCUT KEYBOARD
     document.addEventListener('keydown', function (e) {
@@ -334,8 +334,7 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
     function reset_pos()
     {
         $('#kode_obat').val("");
-        $('#nama_obat').find('option:selected').removeAttr('selected');
-        $("#nama_obat").val(0).change();
+        $("#nama_obat").val('');
         $('#satuan_obat').find('option:selected').removeAttr('selected');
         $("#satuan_obat").val(0).change();
         $("#jml_obat").val('1');
@@ -352,19 +351,21 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
         var satuan = $('#satuan_obat').val();
         var stock = $('#stock').val();
         var ret = false;
-
+        var val_obat = search_by(obat, 'nama', nama, 'id_data_obat');
+        /*
+         console.log(kode);
+         console.log(nama);
+         console.log(jumlah);
+         console.log(satuan);
+         console.log(stock);*/
         if (jumlah < 0 || isNaN(jumlah))
         {
             jumlah = 1;
             $('#jml_obat').val(jumlah);
         }
 
-
-
-
-        if (nama != '0' && !isNaN(parseInt(jumlah)) && jumlah > 0 && satuan != '0' && stock > 0)
+        if (val_obat != '' && !isNaN(parseInt(jumlah)) && jumlah > 0 && satuan != '0' && stock > 0)
         {
-
             $('#btn_tambah_obat').slideDown();
             ret = true;
         }
@@ -376,13 +377,13 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
 
         $('#txt_keterangan').text("");
 
-        if (nama != '0')
+        if (val_obat != '')
         {
             if (parseInt(stock) == 1)
             {
                 $('#txt_keterangan').text("Stock Hanya 1 Lagi !");
             }
-            else if (stock == '0')
+            else if (stock <= 0)
             {
                 $('#txt_keterangan').text("Stock Sudah Habis !");
             }
@@ -403,10 +404,20 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
 
     function ubah_jumlah(id)
     {
+        var satuan_obat = search_by(satuan, 'nama', $('#satuan_' + id).text(), 'id_satuan');
         var jumlah = $('#jml_' + id).val();
         var harga = parseInt($('#harga_' + id).text().replace(/[Rp`~!@#$%^&*()_| +\-=?;:'",.<>\{\}\[\]\\\/]/gi, ''));
         var stock = $('#stock_' + id).text();
         var notifikasi = "";
+
+        var jumlah_satuan_kecil = $('#jumlah_' + id).attr('title');
+        var satuan_kecil = $('#satuan_' + id).attr('title');
+        var jumlah_jual_satuan_kecil = 0;
+
+
+
+
+
         //console.log(stock);
         if (isNaN(jumlah) || parseInt(jumlah) > stock || jumlah == '')
         {
@@ -416,6 +427,8 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
                 console.log(jumlah);
                 //$('#jml_' + id).val(stock);
                 $('#jml_' + id).val(jumlah);
+
+
                 notifikasi = "1";
             }
             else
@@ -426,6 +439,12 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
             }
         }
 
+        if (satuan_obat == satuan_kecil)
+            jumlah_jual_satuan_kecil = jumlah;
+        else
+            jumlah_jual_satuan_kecil = jumlah * jumlah_satuan_kecil;
+
+        $('#jml_' + id).attr('title', jumlah_jual_satuan_kecil);
         $('#total_' + id).text(toRp(jumlah * harga));
         get_grand_total();
 
@@ -486,6 +505,7 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
 
     function new_transaksi()
     {
+
         $('#btn_new_transaksi').hide();
         $('#btn_cancel_transaksi').show();
         get_id_trx();
@@ -499,6 +519,83 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
                 .done(function (result) {
                     obat = result;
                 });
+
+        ac_nama_obat = $.map(obat, function (value, key) {
+            return {value: value['nama'], data: value['barcode']};
+        });
+        ac_kode_obat = $.map(obat, function (value, key) {
+            return {value: value['barcode'], data: value['nama']};
+        });
+
+        $('#kode_obat').autocomplete({
+            lookup: ac_kode_obat,
+            lookupFilter: function (suggestion, originalQuery, queryLowerCase) {
+                var re = new RegExp('\\b' + $.Autocomplete.utils.escapeRegExChars(queryLowerCase), 'gi');
+                return re.test(suggestion.value);
+            },
+            onSelect: function (suggestion) {
+
+                if ($('#kode_obat').val() != '')
+                {
+                    $("#nama_obat").val(search_by(obat, 'barcode', $('#kode_obat').val(), 'nama')).change();
+                    var val_obat = search_by(obat, 'nama', $('#nama_obat').val(), 'id_data_obat');
+                    console.log("Value Obat : " + val_obat);
+                    get_satuan(val_obat);
+                    $("#harga_obat").val(search_by(obat, 'barcode', $('#kode_obat').val(), 'harga_jual')).change();
+                    $("#txt_temp_stock").val(search_by(obat, 'barcode', $('#kode_obat').val(), 'stock_masuk') - search_by(obat, 'barcode', $('#kode_obat').val(), 'stock_keluar'));
+                    $("#txt_stock").val(Math.floor($("#txt_temp_stock").val() / search_by(obat, 'barcode', $('#kode_obat').val(), 'jumlah_satuan_kecil')));
+                    $("#stock").val($("#txt_temp_stock").val());
+
+                    if ($("#nama_obat").val() != 0)
+                        input_show();
+
+                }
+                else
+                {
+                    input_hide();
+                }
+
+                check_input();
+            },
+            onInvalidateSelection: function () {
+                input_hide();
+                check_input();
+            }
+        });
+
+        $('#nama_obat').autocomplete({
+            lookup: ac_nama_obat,
+            lookupFilter: function (suggestion, originalQuery, queryLowerCase) {
+                var re = new RegExp('\\b' + $.Autocomplete.utils.escapeRegExChars(queryLowerCase), 'gi');
+                return re.test(suggestion.value);
+            },
+            onSelect: function (suggestion) {
+                var val_obat = search_by(obat, 'nama', $('#nama_obat').val(), 'id_data_obat');
+                //console.log('asd');
+                if (val_obat != 0)
+                {
+                    $("#kode_obat").val(search_by(obat, 'id_data_obat', val_obat, 'barcode'));
+                    //$("#satuan_obat").val(search_by(obat, 'id_data_obat', val_obat, 'satuan_kecil')).change();
+                    get_satuan(val_obat);
+                    $("#harga_obat").val(search_by(obat, 'id_data_obat', val_obat, 'harga_jual'));
+                    $("#txt_temp_stock").val(search_by(obat, 'id_data_obat', val_obat, 'stock_masuk') - search_by(obat, 'id_data_obat', val_obat, 'stock_keluar'));
+                    $("#txt_stock").val(Math.floor($("#txt_temp_stock").val() / search_by(obat, 'id_data_obat', val_obat, 'jumlah_satuan_kecil')));
+                    $("#stock").val($("#txt_temp_stock").val());
+                    input_show();
+                }
+                else
+                {
+                    reset_pos();
+                    input_hide();
+                }
+
+                check_input();
+            },
+            onInvalidateSelection: function () {
+                input_hide();
+                check_input();
+            }
+        });
 
         $('#kode_obat').focus();
     }
@@ -544,8 +641,7 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
     {
         if ($("#harga_obat").val() != '')
         {
-            var t = document.getElementById("nama_obat");
-            var val_obat = t.options[t.selectedIndex].value;
+            var val_obat = search_by(obat, 'nama', $('#nama_obat').val(), 'id_data_obat');
             harga = parseInt(search_by(obat, 'id_data_obat', val_obat, 'harga_jual'));
             //console.log(harga);
             $('#harga_obat').val(harga + (harga * $('#sts_trx').val() / 100));
@@ -569,7 +665,7 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
 
     function clear_string(str)
     {
-        return str.replace(/[Rp`~!@#$%^&*()_| +\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
+        return str.replace(/[Rp`~!@#$%^&*()_| +\-=?;:'",<>\{\}\[\]\\\/]/gi, '');
     }
 
     function search_barcode(barcode)
@@ -589,6 +685,7 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
             }
 
         }
+
         var tbl_barcode;
         for (i = 0; i < ar_total.length; i++)
         {
@@ -617,39 +714,53 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
     function add_obat()
     {
         var kode = $('#kode_obat').val();
-        var t = document.getElementById("nama_obat");
-        var nama = t.options[t.selectedIndex].text;
+        var nama = $('#nama_obat').val();
         t = document.getElementById("satuan_obat");
-        var id_obat = $('#nama_obat').val();
+        var id_obat = search_by(obat, 'nama', $('#nama_obat').val(), 'id_data_obat');
         var satuan = t.options[t.selectedIndex].text;
         var jumlah = $('#jml_obat').val();
         var harga = $('#harga_obat').val();
         var stock = $('#stock').val();
         var count = parseInt($('#isi_data tr').length) + 1;
-
+        var jumlah_satuan_kecil = search_by(obat, 'nama', $('#nama_obat').val(), 'jumlah_satuan_kecil');
+        var satuan_kecil = search_by(obat, 'nama', $('#nama_obat').val(), 'satuan_kecil');
         var id_barcode = search_barcode(kode);
+        var jumlah_jual_satuan_kecil = 0;
 
-        console.log(id_barcode);
-
-        if (!id_barcode)
+        if (satuan == satuan_kecil)
+            jumlah_jual_satuan_kecil = jumlah;
+        else
+            jumlah_jual_satuan_kecil = jumlah * jumlah_satuan_kecil;
+        //console.log(id_barcode);
+        //console.log();
+        var check_nama = search_by(obat, 'nama', nama, 'id_data_obat');
+        var check_kode = search_by(obat, 'barcode', kode, 'id_data_obat');
+        if (check_nama == check_kode && check_nama != '' && check_nama != '')
         {
-            $('#isi_data').append(
-                    '<tr id="row_' + count + '"><td style = "width: 40px; vertical-align:middle;" class = "text-center"> <button onclick="remove_row(' + count + ')"> <i class = "fa fa-trash-o"> </i></button> </td>' +
-                    '<td id="stock_' + count + '" type="hidden" style="display:none;"> ' + stock + ' </td>' +
-                    '<td id="id_' + count + '" type="hidden" style="display:none;"> ' + id_obat + ' </td>' +
-                    '<td id="nama_' + count + '" style = "width: 300px; font-size:13px; vertical-align:middle;"> ' + nama + ' </td>' +
-                    '<td id="kode_' + count + '" style = "width: 150px; font-size:13px; vertical-align:middle;"> ' + kode + ' </td>' +
-                    '<td id="jumlah_' + count + '" style = "width: 50px; font-size:13px;" class = "text-center"><input max="' + stock + '" id="jml_' + count + '" style="width:50px;" type="number" min="1" value="' + jumlah + '" onchange="ubah_jumlah(' + count + ')" onkeyup="ubah_jumlah(' + count + ')"></td>' +
-                    '<td id="satuan_' + count + '" style = "width: 80px; font-size:13px; vertical-align:middle;"> ' + satuan + ' </td>' +
-                    '<td id="harga_' + count + '" style = "width: 120px; font-size:15px; vertical-align:middle;"> ' + toRp(harga) + ' </td>' +
-                    '<td class="total" id="total_' + count + '" style = "width: 120px; font-size:15px; vertical-align:middle;">' + toRp((parseInt(jumlah) * parseInt(harga))) + '</td></tr>'
-                    );
+            if (!id_barcode)
+            {
+                $('#isi_data').append(
+                        '<tr id="row_' + count + '"><td style = "width: 40px; vertical-align:middle;" class = "text-center"> <button onclick="remove_row(' + count + ')"> <i class = "fa fa-trash-o"> </i></button> </td>' +
+                        '<td id="stock_' + count + '" type="hidden" style="display:none;"> ' + stock + ' </td>' +
+                        '<td id="id_' + count + '" type="hidden" style="display:none;"> ' + id_obat + ' </td>' +
+                        '<td id="nama_' + count + '" style = "width: 300px; font-size:13px; vertical-align:middle;"> ' + nama + ' </td>' +
+                        '<td id="kode_' + count + '" style = "width: 150px; font-size:13px; vertical-align:middle;"> ' + kode + ' </td>' +
+                        '<td id="jumlah_' + count + '" style = "width: 50px; font-size:13px;" class = "text-center" title="' + jumlah_satuan_kecil + '"><input max="' + stock + '" id="jml_' + count + '" style="width:50px;" type="number" min="1" value="' + jumlah + '" onchange="ubah_jumlah(' + count + ')" onkeyup="ubah_jumlah(' + count + ')" title="' + jumlah_jual_satuan_kecil + '"></td>' +
+                        '<td id="satuan_' + count + '" style = "width: 80px; font-size:13px; vertical-align:middle;" title="' + satuan_kecil + '"> ' + satuan + ' </td>' +
+                        '<td id="harga_' + count + '" style = "width: 120px; font-size:15px; vertical-align:middle;"> ' + toRp(harga) + ' </td>' +
+                        '<td class="total" id="total_' + count + '" style = "width: 120px; font-size:15px; vertical-align:middle;">' + toRp((parseInt(jumlah) * parseInt(harga))) + '</td></tr>'
+                        );
+            }
+            else
+            {
+                var id_bar = new Array();
+                id_bar = id_barcode.split('_');
+                add_jumlah(id_bar[1], jumlah);
+            }
         }
         else
         {
-            var id_bar = new Array();
-            id_bar = id_barcode.split('_');
-            add_jumlah(id_bar[1], jumlah);
+            alert("Nama atau Kode Obat Tidak Ada !");
         }
         get_grand_total();
         input_hide();
@@ -688,63 +799,42 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
         });
 
         $('#kode_obat').on("keyup", function () {
-            if ($('#kode_obat').val() != '')
-            {
-                $("#nama_obat").val(search_by(obat, 'barcode', $('#kode_obat').val(), 'id_data_obat')).change();
-                // $("#satuan_obat").val(search_by(obat, 'barcode', $('#kode_obat').val(), 'satuan_kecil')).change();
-                get_satuan($("#nama_obat").val());
-                $("#harga_obat").val(search_by(obat, 'barcode', $('#kode_obat').val(), 'harga_jual')).change();
-                $("#txt_temp_stock").val(search_by(obat, 'barcode', $('#kode_obat').val(), 'stock_masuk') - search_by(obat, 'barcode', $('#kode_obat').val(), 'stock_keluar'));
-                $("#txt_stock").val(Math.floor($("#txt_temp_stock").val() / search_by(obat, 'barcode', $('#kode_obat').val(), 'jumlah_satuan_kecil')));
-                $("#stock").val($("#txt_temp_stock").val());
+            /*
+             if ($('#kode_obat').val() != '')
+             {
+             $("#nama_obat").val(search_by(obat, 'barcode', $('#kode_obat').val(), 'id_data_obat')).change();
+             // $("#satuan_obat").val(search_by(obat, 'barcode', $('#kode_obat').val(), 'satuan_kecil')).change();
+             get_satuan($("#nama_obat").val());
+             $("#harga_obat").val(search_by(obat, 'barcode', $('#kode_obat').val(), 'harga_jual')).change();
+             $("#txt_temp_stock").val(search_by(obat, 'barcode', $('#kode_obat').val(), 'stock_masuk') - search_by(obat, 'barcode', $('#kode_obat').val(), 'stock_keluar'));
+             $("#txt_stock").val(Math.floor($("#txt_temp_stock").val() / search_by(obat, 'barcode', $('#kode_obat').val(), 'jumlah_satuan_kecil')));
+             $("#stock").val($("#txt_temp_stock").val());
 
-                if ($("#nama_obat").val() != 0)
-                    input_show();
+             if ($("#nama_obat").val() != 0)
+             input_show();
 
-            }
-            else
-            {
-                input_hide();
-            }
+             }
+             else
+             {
+             input_hide();
+             }
 
-            check_input();
+             check_input();*/
 
         });
 
         $('#nama_obat').on("click", function () {
-
-            var t = document.getElementById("nama_obat");
-            var val_obat = t.options[t.selectedIndex].value;
-            //console.log('asd');
-            if (val_obat != 0)
-            {
-                $("#kode_obat").val(search_by(obat, 'id_data_obat', val_obat, 'barcode'));
-                //$("#satuan_obat").val(search_by(obat, 'id_data_obat', val_obat, 'satuan_kecil')).change();
-                get_satuan($("#nama_obat").val());
-                $("#harga_obat").val(search_by(obat, 'id_data_obat', val_obat, 'harga_jual'));
-                $("#txt_temp_stock").val(search_by(obat, 'id_data_obat', val_obat, 'stock_masuk') - search_by(obat, 'id_data_obat', val_obat, 'stock_keluar'));
-                $("#txt_stock").val(Math.floor($("#txt_temp_stock").val() / search_by(obat, 'id_data_obat', val_obat, 'jumlah_satuan_kecil')));
-                $("#stock").val($("#txt_temp_stock").val());
-                input_show();
-            }
-            else
-            {
-                reset_pos();
-                input_hide();
-            }
-
             check_input();
-
         });
 
         $('#jml_obat').on("change keyup", function () {
-            jumlah = $('#jml_obat').val();
-            stock = $('#stock').val();
+            var jumlah = $('#jml_obat').val();
+            var stock = $('#stock').val();
             //console.log(jumlah);
 
             if (!isNaN(jumlah))
             {
-                sisa_stock = stock - jumlah;
+                var sisa_stock = stock - jumlah;
                 if (sisa_stock <= 0)
                 {
                     //console.log('Stock Habis');
@@ -787,7 +877,7 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
             for (i = 0; i < ar_total.length; i++)
             {
                 struk += $('#nama_' + ar_total[i]).text().substring(0, 30) + '\n';
-                struk += '\t\tx' + $('#jml_' + ar_total[i]).val() + $('#satuan_' + ar_total[i]).text() + '\t@' + $('#harga_' + ar_total[i]).text() + '\t' + $('#total_' + ar_total[i]).text() + '\n';
+                struk += '\tx' + $('#jml_' + ar_total[i]).val() + $('#satuan_' + ar_total[i]).text() + '\t@' + $('#harga_' + ar_total[i]).text() + '\t' + $('#total_' + ar_total[i]).text() + '\n';
             }
 
             struk += "------------------------------\n";
