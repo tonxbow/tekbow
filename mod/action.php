@@ -78,7 +78,7 @@ switch ($request) {
             $id_data_obat = str_replace(' ', '', $data_body[5]);
 
             $struk .= trim(substr($data_body[0], 0, 40)) . "\r\n";
-            $struk .= " x" . $jumlah_terjual . "\t" . $satuan_terjual . "\t@" . str_replace(' ', '', trim($data_body[3])) . "\t" . str_replace(' ', '', trim($data_body[4])) . "\r\n";
+            $struk .= " x" . $jumlah_terjual . " " . $satuan_terjual . "\t@" . str_replace(' ', '', trim($data_body[3])) . "\t" . str_replace(' ', '', trim($data_body[4])) . "\r\n";
 
 
             //Save Table Transaksi_detail
@@ -119,6 +119,9 @@ switch ($request) {
         $struk .= $printer->AlignCenter();
         $struk .= $objFunction->get_datetime_sql() . "\r\n";
         $struk .= "Terima Kasih";
+        $struk .= $printer->PrintEnter();
+        $struk .= $printer->PrintEnter();
+        $struk .= $printer->PrintEnter();
         $struk .= $printer->PrintEnter();
         $struk .= $printer->PrintEnter();
         $struk .= $printer->PrintEnter();
