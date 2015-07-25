@@ -60,8 +60,8 @@ else
                             <div class="btn-group pull-right" style="position: absolute;left: 92%;">
                                 <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown">Export <i class="fa fa-angle-down"></i></button>
                                 <ul class="dropdown-menu pull-right">
-                                    <li><a target="_blank" href="cetak/ctkreport.php?ask=<?php echo $objEnkrip->encode('pdf') ?>">PDF</a></li>
-                                    <li><a target="_blank" href="cetak/ctkreport.php?ask=<?php echo $objEnkrip->encode('xls') ?>">Excel</a></li>
+                                    <li><a target="_blank" href="mod/cetak.php?request=<?php echo $objEnkrip->encode('transaksi') . '&s=' . $objEnkrip->encode($date1) . '&e=' . $objEnkrip->encode($date2) . '&j=' . $objEnkrip->encode('pedeef'); ?>">PDF</a></li>
+                                    <li><a target="_blank" href="mod/cetak.php?request=<?php echo $objEnkrip->encode('transaksi') . '&s=' . $objEnkrip->encode($date1) . '&e=' . $objEnkrip->encode($date2) . '&j=' . $objEnkrip->encode('exeles'); ?>">Excel</a></li>
 
                                 </ul>
                             </div>

@@ -497,7 +497,7 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
             $('#btn_bayar').slideUp();
         }
 
-        $("#grand_total").text(toRp(grand_total));
+        $("#grand_total").text(toRp(Math.round(grand_total / 100) * 100));
         check_bayar();
     }
 

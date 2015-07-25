@@ -6,10 +6,6 @@ class printer {
 
     }
 
-    public function chr($desimal) {
-
-    }
-
     public function PrintLogo() {
         return chr(28) . chr(112) . chr(1) . chr(1);
     }
@@ -70,7 +66,10 @@ class printer {
 
     public function print_data($port, $data) {
         $port = strtolower($port);
-        exec("mode '$port': BAUD=9600 PARITY=n DATA=8 STOP=1 to=off dtr=off rts=off");
+        exec("mode $port: BAUD=9600 PARITY=n DATA=8 STOP=1 to=off dtr=off rts=off", $response);
+        //var_dump($response);
+        //exit();
+        //exec("mode '$port': BAUD=9600 PARITY=n DATA=8 STOP=1 to=off dtr=off rts=off");
         $fp = fopen($port, "w");
         //$fp = fopen('/dev/ttyUSB0','r+'); //use this for Linux
         fwrite($fp, $data); //write string to serial
