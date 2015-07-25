@@ -62,7 +62,6 @@ else
                                 <ul class="dropdown-menu pull-right">
                                     <li><a target="_blank" href="mod/cetak.php?request=<?php echo $objEnkrip->encode('transaksi') . '&s=' . $objEnkrip->encode($date1) . '&e=' . $objEnkrip->encode($date2) . '&j=' . $objEnkrip->encode('pedeef'); ?>">PDF</a></li>
                                     <li><a target="_blank" href="mod/cetak.php?request=<?php echo $objEnkrip->encode('transaksi') . '&s=' . $objEnkrip->encode($date1) . '&e=' . $objEnkrip->encode($date2) . '&j=' . $objEnkrip->encode('exeles'); ?>">Excel</a></li>
-
                                 </ul>
                             </div>
                         <?php } ?>

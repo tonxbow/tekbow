@@ -14,13 +14,13 @@ class db extends mysqli {
             die('Connect Error (' . mysqli_connect_errno() . ') ' . mysqli_connect_error());
         }
     }
-    
-    public function get_data($conn,$tbl, $fldSelect, $crt, $ord, $grp) {// data tertentu
+
+    public function get_data($conn, $tbl, $fldSelect, $crt, $ord, $grp) {// data tertentu
         $qs = "SELECT " . $fldSelect . " FROM " . $tbl;
         $qs .= ($crt != '') ? " WHERE " . $crt . " " : "";
-        $qs .= ($ord != '') ? " ORDER BY " . $ord : "";
         $qs .= ($grp != '') ? " GROUP BY " . $grp : "";
-//    echo $qs.' | ';
+        $qs .= ($ord != '') ? " ORDER BY " . $ord : "";
+        //echo $qs . ' | ';
         $rData = array();
         if ($result = $conn->query($qs)) {
             /* fetch associative array */
@@ -34,7 +34,7 @@ class db extends mysqli {
         return $rData;
     }
 
-    public function add_data($conn,$tbl, $val) {
+    public function add_data($conn, $tbl, $val) {
         //global $conn;
         $bOk = false;
 
@@ -64,7 +64,7 @@ class db extends mysqli {
         return $bOk;
     }
 
-    public function update_data($conn,$tbl, $val, $crt) {
+    public function update_data($conn, $tbl, $val, $crt) {
         //global $conn;
 
         $bOk = false;
@@ -94,7 +94,7 @@ class db extends mysqli {
         return $bOk;
     }
 
-    public function delete_data($conn,$tbl, $crt) {
+    public function delete_data($conn, $tbl, $crt) {
         //global $conn;
         $bOk = false;
 
@@ -113,9 +113,8 @@ class db extends mysqli {
         return $bOk;
     }
 
-    public function get_data_join($conn,$tbl1, $tbl2, $id, $fldSelect, $crt, $ord, $grp) {// data tertentu
+    public function get_data_join($conn, $tbl1, $tbl2, $id, $fldSelect, $crt, $ord, $grp) {// data tertentu
         //global $conn;
-
         $qs = "SELECT " . $fldSelect . " FROM " . $tbl1 . " INNER JOIN " . $tbl2 . " USING (" . $id . ")";
         $qs .= ($crt != '') ? " WHERE " . $crt . " " : "";
         $qs .= ($ord != '') ? " ORDER BY " . $ord : "";
@@ -135,9 +134,8 @@ class db extends mysqli {
         return $rData;
     }
 
-    public function get_curr_data($conn,$tbl, $fldSelect, $crt) {// data tertentu
+    public function get_curr_data($conn, $tbl, $fldSelect, $crt) {// data tertentu
         //global $conn;
-
         $qs = "SELECT " . $fldSelect . " FROM " . $tbl;
         $qs .= ($crt != '') ? " WHERE " . $crt . " " : "";
         //echo $qs.' | ';
@@ -155,7 +153,7 @@ class db extends mysqli {
     }
 
 //aan
-    public function custom_query($conn,$qs) {// data tertentu
+    public function custom_query($conn, $qs) {// data tertentu
         //global $conn;
         $rData = array();
         if ($result = $conn->query($qs)) {

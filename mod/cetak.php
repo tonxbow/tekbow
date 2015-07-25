@@ -13,7 +13,7 @@ $objEnkrip = new Encryption();
 $request = $objEnkrip->decode($_REQUEST['request']);
 
 //Style
-$report = '<style>
+$report = '<html><style>
          table,th,td,tr
          {
             border : 1px solid;
@@ -27,7 +27,8 @@ $report = '<style>
          .text-center { text-align : center;}
          .text-right { text-align : right;}
 
-         </style>';
+         </style><header><title>Cetak Laporan</title></header><body>';
+
 
 
 switch ($request) {
@@ -111,7 +112,7 @@ switch ($request) {
 if ($jenis == 'pedeef') {
     require_once("../lib/dompdf/dompdf_config.inc.php");
     ob_start();
-    echo '<div style="width:100%;">' . $report . '</div>';
+    echo '<div style="width:100%;">' . $report . '</div></body></html>';
 
     file_put_contents('tempdataPrint.html', ob_get_contents());
     $filename = 'tempdataPrint.html';
