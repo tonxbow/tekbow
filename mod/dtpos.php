@@ -530,10 +530,12 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
         ac_nama_obat = $.map(obat, function (value, key) {
             return {value: value['nama'], data: value['barcode']};
         });
-        ac_kode_obat = $.map(obat, function (value, key) {
-            return {value: value['barcode'], data: value['nama']};
-        });
+
         /*
+         ac_kode_obat = $.map(obat, function (value, key) {
+         return {value: value['barcode'], data: value['nama']};
+         });
+
          $('#kode_obat').autocomplete({
          lookup: ac_kode_obat,
          lookupFilter: function (suggestion, originalQuery, queryLowerCase) {

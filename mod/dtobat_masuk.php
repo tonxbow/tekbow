@@ -244,15 +244,16 @@ $inputClass = "col-sm-9";
                         <div class = "<?php echo $inputClass; ?>"><input type="text" name="nama_obat" id="tb_new_nama_obat" class="form-control"/></div>
                     </div>
                     <div id="detail_new_obat">
+                        <!--
                         <div class = "form-group">
                             <label for = "" class = "<?php echo $labelClass; ?>">Group Obat :</label>
                             <div class = "<?php echo $inputClass; ?>">
                                 <select class="form-control" name="group_obat" id="cb_new_group_obat">
-                                    <?php
-                                    for ($i = 0; $i < count($group_obat); $i++) {
-                                        echo '<option value = "' . $objEnkrip->encode($group_obat[$i]['id_group_obat']) . '">' . $group_obat[$i]['nama'] . '</option>';
-                                    }
-                                    ?>
+                        <?php
+                        for ($i = 0; $i < count($group_obat); $i++) {
+                            echo '<option value = "' . $objEnkrip->encode($group_obat[$i]['id_group_obat']) . '">' . $group_obat[$i]['nama'] . '</option>';
+                        }
+                        ?>
                                 </select>
                             </div>
                         </div>
@@ -260,11 +261,11 @@ $inputClass = "col-sm-9";
                             <label for = "" class = "<?php echo $labelClass; ?>">Jenis Obat :</label>
                             <div class = "<?php echo $inputClass; ?>">
                                 <select class="form-control" name="jenis_obat" id="cb_new_jenis_obat">
-                                    <?php
-                                    for ($i = 0; $i < count($jenis_obat); $i++) {
-                                        echo '<option value = "' . $objEnkrip->encode($jenis_obat[$i]['id_jenis_obat']) . '">' . $jenis_obat[$i]['nama'] . '</option>';
-                                    }
-                                    ?>
+                        <?php
+                        for ($i = 0; $i < count($jenis_obat); $i++) {
+                            echo '<option value = "' . $objEnkrip->encode($jenis_obat[$i]['id_jenis_obat']) . '">' . $jenis_obat[$i]['nama'] . '</option>';
+                        }
+                        ?>
                                 </select>
                             </div>
                         </div>
@@ -272,14 +273,14 @@ $inputClass = "col-sm-9";
                             <label for = "" class = "<?php echo $labelClass; ?>">Type Obat :</label>
                             <div class = "<?php echo $inputClass; ?>">
                                 <select class="form-control" name="type_obat" id="cb_new_type_obat">
-                                    <?php
-                                    for ($i = 0; $i < count($type_obat); $i++) {
-                                        echo '<option value = "' . $objEnkrip->encode($type_obat[$i]['id_type_obat']) . '">' . $type_obat[$i]['nama'] . '</option>';
-                                    }
-                                    ?>
+                        <?php
+                        for ($i = 0; $i < count($type_obat); $i++) {
+                            echo '<option value = "' . $objEnkrip->encode($type_obat[$i]['id_type_obat']) . '">' . $type_obat[$i]['nama'] . '</option>';
+                        }
+                        ?>
                                 </select>
                             </div>
-                        </div>
+                        </div>-->
                         <div class = "form-group">
                             <label for = "" class = "col-sm-offset-2 lbl col-sm-1 text-right">Satu </label>
                             <div class = "col-sm-3">
@@ -885,7 +886,7 @@ $inputClass = "col-sm-9";
         else if (harga_satuan != harga_sebelum)
         {
             var harga_obat = harga_satuan + ";"
-            $.post("mod/action.php", {request: "<?php echo $objEnkrip->encode('update_data_obat'); ?>", id_obat: id_obat, harga: harga_obat})
+            $.post("mod/action.php", {request: "<?php echo $objEnkrip->encode('update_harga_data_obat'); ?>", id_obat: id_obat, harga: harga_obat})
                     .done(function (result) {
                         if (result != "success")
                             console.log("Perubahan Gagal, Keterangan : \n\n " + result);
@@ -1063,7 +1064,7 @@ $inputClass = "col-sm-9";
             var id_obat = check_string($('#txt_id_obat_ubah').text());
             var harga_obat = check_string($('#txt_harga_ubah').text());
 
-            $.post("mod/action.php", {request: "<?php echo $objEnkrip->encode('update_data_obat'); ?>", id_obat: id_obat, harga: harga_obat})
+            $.post("mod/action.php", {request: "<?php echo $objEnkrip->encode('update_harga_data_obat'); ?>", id_obat: id_obat, harga: harga_obat})
                     .done(function (result) {
                         if (result != "success")
                             alert("Perubahan Gagal, Keterangan : \n\n " + result);
@@ -1156,6 +1157,7 @@ $inputClass = "col-sm-9";
         $(document).on("change keyup", "#tb_new_jumlah_satuan, #tb_new_harga_beli, #tb_new_harga_jual", function () {
             input_new_check();
         });
+
         $('#btn_new_simpan').on('click', function () {
             if (input_new_check('1'))
             {
@@ -1166,10 +1168,10 @@ $inputClass = "col-sm-9";
                 var satuan_kecil = $('#cb_new_satuan_kecil_obat').val();
                 var harga_beli = check_string($('#tb_new_harga_beli').val());
                 var harga_jual = check_string($('#tb_new_harga_jual').val());
-                var group = $('#cb_new_group_obat').val();
-                var jenis = $('#cb_new_jenis_obat').val();
-                var tipe = $('#cb_new_type_obat').val();
-                var data_send = kode + ';' + nama + ';' + satuan_besar + ';' + isi + ';' + satuan_kecil + ';' + harga_beli + ';' + harga_jual + ';' + group + ';' + jenis + ';' + tipe;
+                //var group = $('#cb_new_group_obat').val();
+                //var jenis = $('#cb_new_jenis_obat').val();
+                //var tipe = $('#cb_new_type_obat').val();
+                var data_send = kode + ';' + nama + ';' + satuan_besar + ';' + isi + ';' + satuan_kecil + ';' + harga_beli + ';' + harga_jual;//+ ';' + group + ';' + jenis + ';' + tipe;
                 $.post("mod/action.php", {request: "<?php echo $objEnkrip->encode('add_data_obat'); ?>", data: data_send})
                         .done(function (result) {
                             if (result == "fail")

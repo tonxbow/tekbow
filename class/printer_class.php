@@ -23,7 +23,7 @@ class printer {
     }
 
     public function BigText() {
-        return chr(27) . chr(33) . chr(48);
+        return chr(27) . chr(33) . chr(16);
     }
 
     public function ScaleText() {
@@ -50,13 +50,14 @@ class printer {
         $header = "";
         $header .= self::AlignCenter();
         $header .= self::BigText();
-        $header .= "TOKO FIRDAUS";
+        $header .= "TOKO OBAT FIRDAUS";
         $header .= self::PrintEnter();
         $header .= self::TextNormal();
         $header .= self::AlignCenter();
-        $header .= "Jln.Padalarang No.80-82, Bandung\r\n";
-        $header .= "Telp: 022-7656000\r\n";
-        $header .= self::PrintBar();
+        $header .= "Lantai.1 Blok.E1  no.36\r\n";
+        $header .= "Pasar Cermat Batujajar\r\n";
+        $header .= "Hp: 08xx-xxxx-xxxx\r\n";
+        //$header .= self::PrintBar();
         $header .= self::TextNormal();
         $header .= self::PrintEnter();
         $header .= self::AlignLeft();

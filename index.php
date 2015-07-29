@@ -37,16 +37,14 @@ $objFunction->checkLogin();
         <link rel="stylesheet" type="text/css" href="css/autocomplete.css" />
 
         <script src="js/jquery-1.8.3.min.js"></script>
-        
         <script src="js/jquery.nicescroll.js"></script>
         <script src="js/scripts.js"></script>
         <script src="js/select2/select2.js"></script>
         <script src="js/jquery.datetimepicker.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script src="js/jquery.autocomplete.min.js" />
-        
         <script src="js/jquery.datetimepicker.js"></script>
-       
+
 
 
     </head>

@@ -1,0 +1,138 @@
+<?php
+session_start();
+include 'setting.php';
+require_once ('../class/database_class.php');
+require_once ('../class/printer_class.php');
+require_once ('../class/function_class.php');
+require_once ('../class/enkripsi_class.php');
+
+$db = new db($dbserver, $dbuser, $dbpass, $dbname);
+$objFunction = new myfunction();
+$objEnkrip = new Encryption();
+$printer = new printer();
+
+$request = $objEnkrip->decode($_REQUEST['request']);
+$satuan = $db->get_data($db, 'satuan', '*', '', 'nama ASC', '');
+switch ($request) {
+    case 'data_obat' :
+        $tbl = 'data_obat';
+        $fldSelect = "*";
+        $criteriaField = 'id_data_obat';
+
+//Header Tabel
+        $dataKolom = array('Nama', 'Kode', 'Sat. Besar', 'Sat. Kecil', 'Isi Sat.', 'Harga Beli', 'Harga Dasar', 'Obat In', 'Obat Out', 'Stock', 'Tgl Masuk', 'Action'); //Judul Kolom
+        $dataField = array('nama', 'barcode', 'satuan_besar', 'satuan_kecil', 'jumlah_satuan_kecil', 'harga_dasar', 'harga_jual', 'stock_masuk', 'stock_keluar', 'stock', 'tanggal_terakhir_masuk');
+//field primary key
+        ?>
+        <table class = "table table-striped table-hover table-bordered display" id = "table-data" cellspacing = "0" style = "font-size: 12px;color: #000;">
+            <thead>
+                <tr>
+                    <?php
+                    echo '<th class="text-center">No</th>';
+                    for ($i = 0; $i < count($dataKolom); $i++) {
+                        echo '<th class="text-center">' . $dataKolom[$i] . '</th>';
+                    }
+                    ?>
+                </tr>
+            </thead>
+
+            <tbody id="tbl_body">
+                <?php
+                //
+                $crt = '';
+                $user = $db->get_data($db, 'user', '*', '', '', '');
+                $ArrayDt = $db->get_data($db, $tbl, $fldSelect, $crt, 'nama ASC', '');
+                $grand_total = 0;
+
+                for ($i = 0; $i < count($ArrayDt); $i++) {
+                    $no = $i + 1;
+                    //edit module
+                    echo '<tr>';
+                    echo '<td width="40px" class="text-center">' . $no . '</td>';
+                    for ($x = 0; $x < count($dataField); $x++) {
+
+
+                        switch ($dataField[$x]) {
+                            case 'harga_dasar' :
+                                echo '<td class="text-right"  id="txt_harga_dasar_' . $i . '">' . $objFunction->set_rupiah($ArrayDt[$i][$dataField[$x]]) . '</td>';
+                                break;
+                            case 'harga_jual' : echo '<td class="text-right" id="txt_harga_jual_' . $i . '">' . $objFunction->set_rupiah($ArrayDt[$i][$dataField[$x]]) . '</td>';
+                                break;
+                            case 'nama' : echo '<td class="text-left" id="txt_nama_' . $i . '">' . $ArrayDt[$i][$dataField[$x]] . '</td>';
+                                break;
+                            case 'satuan_kecil' :
+                                $satuan_kecil = $objFunction->search_by($satuan, 'id_satuan', $ArrayDt[$i][$dataField[$x]], 'nama');
+                                echo '<td class="text-center" id="txt_satuan_kecil_' . $i . '">' . $satuan_kecil . '</td>';
+                                break;
+                            case 'satuan_besar' :
+                                echo '<td class="text-center" id="txt_satuan_besar_' . $i . '">' . $objFunction->search_by($satuan, 'id_satuan', $ArrayDt[$i][$dataField[$x]], 'nama') . '</td>';
+                                break;
+                            case 'jumlah_satuan_kecil' :
+                                echo '<td class="text-center" id="txt_jumlah_satuan_kecil_' . $i . '">' . $ArrayDt[$i][$dataField[$x]] . '</td>';
+                                break;
+                            case 'barcode' :
+                                echo '<td class="text-center" id="txt_barcode_' . $i . '">' . $ArrayDt[$i][$dataField[$x]] . '</td>';
+                                break;
+                            case 'stock' :
+                                $stock = ($ArrayDt[$i]['stock_masuk'] - $ArrayDt[$i]['stock_keluar']); //. ' ' . $satuan_kecil;
+                                echo '<td class="text-center">' . $stock . '</td>';
+                                break;
+                            default:
+                                echo '<td class="text-center">' . $ArrayDt[$i][$dataField[$x]] . '</td>';
+                                break;
+                        }
+                    }
+
+                    echo '<td style="whitespace:nowrap;" class="text-center"><button id="btn_edit_' . $i . '" onClick="edit_click(' . $i . ')"><i class="fa fa-pencil"></i></button>
+                                    </td>
+                                    </tr>';
+                }
+                ?>
+            </tbody>
+        </table>
+        <script>
+            function edit_click(id)
+            {
+
+                var nama = $('#txt_nama_' + id).text();
+                var kode = $('#txt_barcode_' + id).text();
+
+                var satuan_besar = search_by(satuan, 'nama', $('#txt_satuan_besar_' + id).text(), 'id_satuan');
+                var satuan_kecil = search_by(satuan, 'nama', $('#txt_satuan_kecil_' + id).text(), 'id_satuan');
+                var jumlah_satuan_kecil = $('#txt_jumlah_satuan_kecil_' + id).text();
+                var harga_dasar = clear_string($('#txt_harga_dasar_' + id).text());
+                var harga_jual = clear_string($('#txt_harga_jual_' + id).text());
+
+                $('#tb_new_kode_obat').val(kode);
+                $('#tb_new_nama_obat').val(nama);
+                //$('#cb_new_satuan_besar_obat').find('option:selected').removeAttr('selected');
+                $('#cb_new_satuan_besar_obat').val(satuan_besar).change();
+                $('#tb_new_jumlah_satuan').val(jumlah_satuan_kecil);
+                $('#cb_new_satuan_kecil_obat').val(satuan_kecil).change();
+                $('#tb_new_harga_beli').val(harga_dasar);
+                $('#tb_new_harga_jual').val(harga_jual);
+
+                $('#txt_act').text("edit");
+                $('#txt_judul_modal').text("Ubah Data Obat");
+                $('#mod_add_data').modal("show");
+                console.log(nama + ',' + kode + ',' + satuan_besar + ',' + satuan_kecil + ',' + jumlah_satuan_kecil + ',' + harga_dasar + ',' + harga_jual);
+            }
+            var tables = $('#table-data').DataTable(
+                    {
+                        "iDisplayLength": 10,
+                        "aLengthMenu": [
+                            [10, 50, 100, -1],
+                            [10, 50, 100, "All"] // change per page values here
+                        ],
+                        "scrollCollapse": true,
+                        "paging": true,
+                        "sDom": "<'row'<'col-xs-6'l><'col-xs-6'f>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
+                    }
+            );
+
+        </script>
+        <?php
+        break;
+}
+?>
+

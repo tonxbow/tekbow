@@ -16,7 +16,7 @@ $submenu = array(
     array(), //Dashboard
     array(), //Master Stock
     array('Report Penjualan', 'Report Obat'), //Report
-    array('Data Obat', 'User'), //Document
+    array('Data Obat', 'Satuan', 'User', 'Setting'), //Document
 );
 
 $indexActiveMenu = -1;

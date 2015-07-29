@@ -13,7 +13,7 @@ $objEnkrip = new Encryption();
 $printer = new printer();
 
 $request = $objEnkrip->decode($_REQUEST['request']);
-
+$satuan = $db->get_data($db, 'satuan', '*', '', 'nama ASC', '');
 switch ($request) {
     case 'id_transaksi' :
         switch ($objEnkrip->decode($_REQUEST['jenis'])) {
@@ -66,7 +66,9 @@ switch ($request) {
         $struk .= $printer->PrintEnter();
         $struk .= "Tanggal      : " . $objFunction->get_daydate();
         $struk .= $printer->PrintEnter();
+        $struk .= "Kasir        : " . $db->get_curr_data($db, 'user', 'nama', 'id_user = "' . $data_transaksi['id_user'] . '"');
         $struk .= $printer->PrintEnter();
+        $struk .= "=========================================\r\n";
 
         //BODY
         $data_detail_transaksi['id_transaksi'] = $id_transaksi;
@@ -77,15 +79,18 @@ switch ($request) {
             $satuan_terjual = str_replace(' ', '', $data_body[2]);
             $id_data_obat = str_replace(' ', '', $data_body[5]);
 
-            $struk .= trim(substr($data_body[0], 0, 40)) . "\r\n";
-            $struk .= " x" . $jumlah_terjual . " " . $satuan_terjual . "\t@" . str_replace(' ', '', trim($data_body[3])) . "\t" . str_replace(' ', '', trim($data_body[4])) . "\r\n";
-
-
+            $struk .= trim(substr($data_body[0], 0, 42)) . "\r\n";
+            $jml_struk = "  " . $jumlah_terjual . " " . $satuan_terjual . " x " . str_replace(' ', '', trim($data_body[3]));
+            $jml_struk = str_pad($jml_struk, 27, " ", STR_PAD_RIGHT);
+            $harga_struk = str_replace(' ', '', trim($data_body[4])) . " ";
+            $harga_struk = str_pad($harga_struk, 15, " ", STR_PAD_LEFT);
+            $struk .= $jml_struk . $harga_struk . "\r\n";
+//42 = 17 + 25
             //Save Table Transaksi_detail
             $data_detail_transaksi['id_transaksi_detail'] = $id_transaksi . '.' . $i;
             $data_detail_transaksi['id_data_obat'] = $id_data_obat;
             $data_detail_transaksi['jumlah'] = $data_body[1];
-            $data_detail_transaksi['satuan'] = $data_body[2];
+            $data_detail_transaksi['satuan'] = $objFunction->search_by($satuan, 'nama', trim($data_body[2]), 'id_satuan');
             $data_detail_transaksi['harga_jual'] = str_replace(' ', '', str_replace('Rp', '', str_replace('.', '', trim($data_body[3]))));
             if (!$db->add_data($db, 'transaksi_detail', $data_detail_transaksi))
                 $ret = 'failed';;
@@ -108,14 +113,20 @@ switch ($request) {
             if (!$db->update_data($db, 'data_obat', $data_obat, 'id_data_obat="' . $id_data_obat . '"'))
                 $ret = 'failed';;
         }
-        $struk .= "-----------------------------------------+" . "\r\n";
-        $struk .= "Total\t:" . $ar_footer[0];
+        $struk .= "=========================================+" . "\r\n";
+        $struk .= $printer->BigText();
+        $temp = str_pad($ar_footer[0] . " ", 17, " ", STR_PAD_LEFT);
+        $struk .= "                   Total " . $temp;
+        $struk .= $printer->TextNormal();
         $struk .= $printer->PrintEnter();
-        $struk .= "Bayar\t:" . $ar_footer[1];
+        $temp = str_pad($ar_footer[1] . " ", 17, " ", STR_PAD_LEFT);
+        $struk .= "                   Bayar " . $temp;
         $struk .= $printer->PrintEnter();
-        $struk .= "Kembali\t:" . $ar_footer[2];
+        $temp = str_pad($ar_footer[2] . " ", 17, " ", STR_PAD_LEFT);
+        $struk .= "                 Kembali " . $temp;
         $struk .= $printer->PrintEnter();
-        $struk .= $printer->PrintBar();
+        $struk .= $printer->PrintEnter();
+        //$struk .= $printer->PrintBar();
         $struk .= $printer->AlignCenter();
         $struk .= $objFunction->get_datetime_sql() . "\r\n";
         $struk .= "Terima Kasih";
@@ -151,29 +162,54 @@ switch ($request) {
         $data = file_get_contents($file);
         echo $data;
         break;
+    case 'update_data_obat' :
+        $data = $_REQUEST['data'];
+        //echo ($data);
+        $ar_data = explode(';', $data);
+        $data_obat['barcode'] = $ar_data[0];
+        $data_obat['nama'] = strtoupper($ar_data[1]);
+        $data_obat['satuan_besar'] = $ar_data[2]; //$objEnkrip->decode($ar_data[2]);
+        $data_obat['jumlah_satuan_kecil'] = $ar_data[3];
+        $data_obat['satuan_kecil'] = $ar_data[4]; //$objEnkrip->decode($ar_data[4]);
+        $data_obat['harga_dasar'] = $ar_data[5];
+        $data_obat['harga_jual'] = $ar_data[6];
+        $data_obat['id_data_obat'] = $ar_data[7];
+        //$data_obat['id_group_obat'] = '0'; //$objEnkrip->decode($ar_data[7]);
+        //$data_obat['id_jenis_obat'] = '0'; //$objEnkrip->decode($ar_data[8]);
+        //$data_obat['id_type_obat'] = '0'; //$objEnkrip->decode($ar_data[9]);
+        print_r($data_obat);
+        /*
+          if ($db->update_data($db, 'data_obat', $data_obat, 'id_data_obat = "' . $data_obat['id_data_obat'] . '"'))
+          echo 'success';
+          else
+          echo 'fail'; */
+        break;
     case 'add_data_obat' :
         $data = $_REQUEST['data'];
         //echo ($data);
         $ar_data = explode(';', $data);
 
         $data_obat['id_data_obat'] = $objFunction->createID('data_obat', 'id_data_obat', 'obt', 5, 99999);
-        $data_obat['barcode'] = $ar_data[0];
-        $data_obat['nama'] = $ar_data[1];
+        if ($ar_data[0] == '')
+            $data_obat['barcode'] = $objFunction->createID('data_obat', 'barcode', $objFunction->get_date(), 5, 99999);
+        else
+            $data_obat['barcode'] = $ar_data[0];
+        $data_obat['nama'] = strtoupper($ar_data[1]);
         $data_obat['satuan_besar'] = $objEnkrip->decode($ar_data[2]);
         $data_obat['jumlah_satuan_kecil'] = $ar_data[3];
         $data_obat['satuan_kecil'] = $objEnkrip->decode($ar_data[4]);
         $data_obat['harga_dasar'] = $ar_data[5];
         $data_obat['harga_jual'] = $ar_data[6];
-        $data_obat['id_group_obat'] = $objEnkrip->decode($ar_data[7]);
-        $data_obat['id_jenis_obat'] = $objEnkrip->decode($ar_data[8]);
-        $data_obat['id_type_obat'] = $objEnkrip->decode($ar_data[9]);
+        $data_obat['id_group_obat'] = '0'; //$objEnkrip->decode($ar_data[7]);
+        $data_obat['id_jenis_obat'] = '0'; //$objEnkrip->decode($ar_data[8]);
+        $data_obat['id_type_obat'] = '0'; //$objEnkrip->decode($ar_data[9]);
         //print_r($data_obat);
         if ($db->add_data($db, 'data_obat', $data_obat))
             echo 'success';
         else
             echo 'fail';
         break;
-    case 'update_data_obat' :
+    case 'update_harga_data_obat' :
         $id_obat = trim($_REQUEST['id_obat']);
         $ar_harga = explode(';', trim($_REQUEST['harga']));
         $data_obat['harga_dasar'] = $ar_harga[0];
@@ -184,8 +220,8 @@ switch ($request) {
             echo 'success';
         else
             echo 'fail';
-
         break;
+
     case 'barang_masuk':
         $ret = 'success';
         //DATA HEAD <TONX> DATA BODY <TONX> DATA FOOTER

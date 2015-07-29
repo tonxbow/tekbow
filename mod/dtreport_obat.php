@@ -20,8 +20,8 @@ $fldSelect = "id_data_obat,jumlah,satuan";
 $criteriaField = 'id_transaksi_detail';
 
 //Header Tabel
-$dataKolom = array('Nama Obat', 'Jumlah', 'Stock', 'Tgl Masuk'); //Judul Kolom
-$dataField = array('id_data_obat', 'jumlah');
+$dataKolom = array('Nama Obat', 'Jumlah Terjual', 'Stock Saat Ini', 'Tanggal Terakhir Masuk'); //Judul Kolom
+$dataField = array('id_data_obat', 'jumlah', 'stock', 'tgl_masuk');
 //field primary key
 
 $date1 = '';
@@ -35,8 +35,6 @@ if ($date1 != '' && $date2 != '')
     $crt = " datetime BETWEEN '" . $date1 . "' AND '" . $date2 . "'  + INTERVAL 1 DAY ";
 else
     $crt = " datetime BETWEEN CURDATE() AND CURDATE() + INTERVAL 1 DAY ";
-
-$crt = '';
 ?>
 
 <!-- page start-->
@@ -48,9 +46,9 @@ $crt = '';
                     <form method="post" action="#">
                         <?php echo $judul; ?>
                         Tanggal :
-                        <input style="width: 150px; color: #000; text-align: center;"  name="date1" id="date1" value="<?php echo ($date1 != '' ? $date1 : ''); ?>">
+                        <input style="width: 150px; color: #000; text-align: center;"  name="date1" id="date1" value="<?php //echo ($date1 != '' ? $date1 : '');             ?>">
                         s.d
-                        <input style="width: 150px; color: #000; text-align: center;"  name="date2" id="date2" value="<?php echo ($date2 != '' ? $date2 : ''); ?>">
+                        <input style="width: 150px; color: #000; text-align: center;"  name="date2" id="date2" value="<?php //echo ($date2 != '' ? $date2 : '');             ?>">
                         <button class="btn btn-danger " id="btn_show" type="submit">Show</button>
                     </form>
                 </div>
@@ -91,69 +89,122 @@ $crt = '';
 
                         <tbody id="tbl_body">
                             <?php
-                            $ArrayDt = $db->get_data($db, $tbl, $fldSelect, $crt, 'datetime DESC', '');
+                            $ArrayDt = $db->get_data($db, $tbl, $fldSelect, $crt, 'id_data_obat DESC', '');
                             $ar_data = array();
                             for ($i = 0; $i < count($ArrayDt); $i++) {
-                                $no = $i + 1;
+
                                 if (count($ar_data) == 0) {
                                     $ar_data [0]['id_data_obat'] = $ArrayDt[$i]['id_data_obat'];
                                     $ar_data [0]['jumlah'] = $ArrayDt[$i]['jumlah'];
                                     $ar_data [0]['satuan'] = $ArrayDt[$i]['satuan'];
                                 }
 
-                                echo "Jumlah : " . count($ar_data) . "<br>";
+                                //echo "Jumlah : " . count($ar_data) . "<br>";
                                 $index = -1;
                                 for ($x = 0; $x < count($ar_data); $x++) {
-                                    if ($ArrayDt[$i]['id_data_obat'] == @$ar_data[$x]['id_data_obat']) {
+                                    if ($ArrayDt[$i]['id_data_obat'] == $ar_data[$x]['id_data_obat']) {
                                         $index = $x;
                                     }
                                 }
-                                if ($index != -1) {
 
-                                    @$ar_data [$index]['jumlah'] += $ArrayDt[$i]['jumlah'];
+                                $z = count($ar_data);
+                                if ($index != -1) {
+                                    if ($ar_data [$index]['satuan'] == $ArrayDt[$i]['satuan']) {
+                                        $ar_data [$index]['jumlah'] += $ArrayDt[$i]['jumlah'];
+                                    } else {
+                                        $index = -1;
+                                        for ($x = 0; $x < count($ar_data); $x++) {
+                                            if ($ArrayDt[$i]['satuan'] == $ar_data[$x]['satuan']) {
+                                                $index = $x;
+                                            }
+                                        }
+                                        if ($index == -1) {
+                                            $ar_data [$z]['id_data_obat'] = $ArrayDt[$i]['id_data_obat'];
+                                            $ar_data [$z]['jumlah'] = $ArrayDt[$i]['jumlah'];
+                                            $ar_data [$z]['satuan'] = $ArrayDt[$i]['satuan'];
+                                        } else {
+                                            $ar_data [$index]['jumlah'] += $ArrayDt[$i]['jumlah'];
+                                        }
+                                    }
                                 } else {
-                                    $z = count($ar_data);
                                     $ar_data [$z]['id_data_obat'] = $ArrayDt[$i]['id_data_obat'];
-                                    @$ar_data [$z]['jumlah'] = $ArrayDt[$i]['jumlah'];
+                                    $ar_data [$z]['jumlah'] = $ArrayDt[$i]['jumlah'];
                                     $ar_data [$z]['satuan'] = $ArrayDt[$i]['satuan'];
                                 }
 
                                 //edit module
-                                /*
-                                  echo '<tr>';
-                                  echo '<td width="40px" class="text-center">' . $no . '</td>';
-                                  for ($x = 0; $x < count($dataField); $x++) {
-                                  $arData = $ArrayDt[$i][$dataField[$x]];
-
-                                  switch ($dataField[$x]) {
-                                  case 'id_data_obat' : echo '<td>' . $objFunction->search_by($data_obat, 'id_data_obat', $ArrayDt[$i][$dataField[$x]], 'nama') . '</td>';
-                                  break;
-                                  case 'jumlah' :
-                                  echo '<td class="text-right">' . $ArrayDt[$i][$dataField[$x]] . ' ' . $ArrayDt[$i]['satuan'] . '</td>';
-                                  break;
-
-                                  default:
-                                  echo '<td class="text-center">' . $ArrayDt[$i][$dataField[$x]] . '</td>';
-                                  break;
-                                  }
-                                  }
-
-                                  echo '</tr>'; */
                             }
-                            $objFunction->debugArray($ar_data);
+
+                            for ($i = 0; $i < count($ar_data); $i++) {
+                                $id_obat = $ar_data[$i]['id_data_obat'];
+                                $jumlah = $ar_data[$i]['jumlah'];
+                                $satuans = $ar_data[$i]['satuan'];
+                                $satuan_kecil = $objFunction->search_by($data_obat, 'id_data_obat', $id_obat, 'satuan_kecil');
+                                $jumlah_satuan_kecil = $objFunction->search_by($data_obat, 'id_data_obat', $id_obat, 'jumlah_satuan_kecil');
+                                //echo $satuan_kecil;
+
+                                if ($satuans != $satuan_kecil) {
+                                    $ar_data[$i]['satuan'] = $satuan_kecil;
+                                    $ar_data[$i]['jumlah'] = $jumlah * $jumlah_satuan_kecil;
+                                }
+                            }
+                            $ar_data_x = array();
+                            $indexAr = 0;
+                            for ($i = 0; $i < count($ar_data); $i++) {
+                                @$ar_data_x[$ar_data[$i]['id_data_obat']] += $ar_data[$i]['jumlah'];
+                            }
+                            $ar_data = array();
+                            foreach ($ar_data_x as $key => $value) {
+                                $ar_data[$indexAr]['id_data_obat'] = $key;
+                                $ar_data[$indexAr]['jumlah'] = $value;
+                                $indexAr++;
+                            }
+
+                            for ($i = 0; $i < count($ar_data); $i++) {
+                                $no = $i + 1;
+                                echo '<tr>';
+                                echo '<td width="40px" class="text-center">' . $no . '</td>';
+                                for ($x = 0; $x < count($dataField); $x++) {
+
+
+                                    switch ($dataField[$x]) {
+                                        case 'id_data_obat' :
+                                            $id_data_obat = $ar_data[$i][$dataField[$x]];
+                                            echo '<td>' . $objFunction->search_by($data_obat, 'id_data_obat', $id_data_obat, 'nama') . '</td>';
+                                            break;
+                                        case 'jumlah' :
+                                            $satuan_kecils = $objFunction->search_by($satuan, 'id_satuan', $objFunction->search_by($data_obat, 'id_data_obat', $id_data_obat, 'satuan_kecil'), 'nama');
+                                            echo '<td class="text-right">' . $ar_data[$i][$dataField[$x]] . ' ' . $satuan_kecils . '</td>';
+                                            break;
+                                        case 'stock' :
+                                            $stock_masuk = $objFunction->search_by($data_obat, 'id_data_obat', $id_data_obat, 'stock_masuk');
+                                            $stock_keluar = $objFunction->search_by($data_obat, 'id_data_obat', $id_data_obat, 'stock_keluar');
+                                            $satuan_kecils = $objFunction->search_by($satuan, 'id_satuan', $objFunction->search_by($data_obat, 'id_data_obat', $id_data_obat, 'satuan_kecil'), 'nama');
+                                            $stock = $stock_masuk - $stock_keluar;
+                                            echo '<td class="text-right">' . $stock . ' ' . $satuan_kecils . '</td>';
+                                            break;
+                                        case 'tgl_masuk' :
+                                            $tgl_masuk = $objFunction->search_by($data_obat, 'id_data_obat', $id_data_obat, 'tanggal_terakhir_masuk');
+                                            $stock = $stock_masuk - $stock_keluar;
+                                            echo '<td class="text-center">' . $tgl_masuk . '</td>';
+                                            break;
+                                        default:
+                                            echo '<td class="text-center">' . $ar_data[$i][$dataField[$x]] . '</td>';
+                                            break;
+                                    }
+                                }
+
+                                echo '</tr>';
+                            }
                             ?>
                         </tbody>
                     </table>
-
                 </div>
-
             </div>
         </section>
     </div>
 </div>
-<?php
-//$grand_total = $objFunction->set_rupiah($grand_total);
-?>
+
 
 <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.min.css" />
 <link rel="stylesheet" type="text/css" href="css/jquery.dataTables_themeroller.css" />
@@ -171,13 +222,39 @@ $crt = '';
         });
         jQuery('#date2').datetimepicker({
             format: 'Y-m-d',
+            onShow: function (ct) {
+                this.setOptions({
+                    //minDate: jQuery('#date1').val() ? jQuery('#date1').val() : false
+                })
+            },
             timepicker: false
         });
     });
 
 
+
+
     jQuery(document).ready(function () {
-        $('#tbl_detail').hide();
+        $('#date2').hide();
+        $('#btn_show').hide();
+
+        $('#date1').on("change", function () {
+            if ($('#date1').val() != '')
+                $('#date2').fadeIn();
+            else
+            {
+                $('#date2').val('');
+                $('#date2').fadeOut();
+            }
+        });
+
+        $('#date2').on("change", function () {
+            if ($('#date2').val() != '')
+                $('#btn_show').fadeIn();
+            else
+                $('#btn_show').fadeOut();
+        });
+
 
         var tables = $('#table-data').DataTable(
                 {
@@ -191,12 +268,6 @@ $crt = '';
                     "sDom": "<'row'<'col-xs-6'l><'col-xs-6'f>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
                 }
         );
-
-
-        $('#btn_detail_total').on("click", function () {
-            $('#tbl_detail').slideToggle();
-
-        });
 
     });
 </script>

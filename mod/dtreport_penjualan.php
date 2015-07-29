@@ -248,6 +248,25 @@ else
 
     jQuery(document).ready(function () {
         $('#tbl_detail').hide();
+        $('#date2').hide();
+        $('#btn_show').hide();
+
+        $('#date1').on("change", function () {
+            if ($('#date1').val() != '')
+                $('#date2').fadeIn();
+            else
+            {
+                $('#date2').val('');
+                $('#date2').fadeOut();
+            }
+        });
+
+        $('#date2').on("change", function () {
+            if ($('#date2').val() != '')
+                $('#btn_show').fadeIn();
+            else
+                $('#btn_show').fadeOut();
+        });
 
         var tables = $('#table-data').DataTable(
                 {
