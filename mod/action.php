@@ -204,6 +204,7 @@ switch ($request) {
     case 'update_setting' :
         $data_request = $_REQUEST['data'];
         $tipe = $_REQUEST['tipe'];
+        $objFunction->log('2', "table : setting, data : " . $data_request . ", tipe : " . $tipe);
 
         $ar_data = explode(';', $data_request);
         if ($tipe == '1') {
@@ -230,7 +231,8 @@ switch ($request) {
     //CRUD Data OBAT
     case 'update_data_obat' :
         $data = $_REQUEST['data'];
-        //echo ($data);
+
+
         $ar_data = explode(';', $data);
         $data_obat['barcode'] = $ar_data[0];
         $data_obat['nama'] = strtoupper($ar_data[1]);
@@ -246,27 +248,24 @@ switch ($request) {
         //$data_obat['id_type_obat'] = '0'; //$objEnkrip->decode($ar_data[9]);
         //print_r($data_obat);
 
-        if ($db->update_data($db, 'data_obat', $data_obat, 'id_data_obat = "' . $data_obat ['id_data_obat'] . '"'))
-            echo
-            'success';
-        else
-            echo
-            'fail';
+        if ($db->update_data($db, 'data_obat', $data_obat, 'id_data_obat = "' . $data_obat ['id_data_obat'] . '"')) {
+            $objFunction->log('2', "table : data_obat, data : " . $data);
+            echo 'success';
+        } else {
+            echo 'fail';
+        }
         break;
     case 'delete_data_obat' :
-        $data_obat['id_data_obat'] = $_REQUEST['data'];
-        //print_r($data_obat);
-
-        if ($db->delete_data($db, 'data_obat', 'id_data_obat = "' . $data_obat ['id_data_obat'] . '"'))
-            echo
-            'success';
-        else
-            echo
-            'fail';
+        $data['id_data_obat'] = $_REQUEST['data'];
+        if ($db->delete_data($db, 'data_obat', 'id_data_obat = "' . $data ['id_data_obat'] . '"')) {
+            echo 'success';
+            $objFunction->log('3', "table : data_obat, id : " . $data['id_data_obat']);
+        } else {
+            echo 'fail';
+        }
         break;
     case 'add_data_obat' :
         $data = $_REQUEST['data'];
-        //echo ($data);
         $ar_data = explode(';', $data);
         $data_obat['id_data_obat'] = $objFunction->createID('data_obat', 'id_data_obat', 'obt', 5, 99999);
         if ($ar_data[0] == '')
@@ -283,12 +282,12 @@ switch ($request) {
         $data_obat['id_jenis_obat'] = '0'; //$objEnkrip->decode($ar_data[8]);
         $data_obat['id_type_obat'] = '0'; //$objEnkrip->decode($ar_data[9]);
         //print_r($data_obat);
-        if ($db->add_data($db, 'data_obat', $data_obat))
-            echo
-            'success';
-        else
-            echo
-            'fail';
+        if ($db->add_data($db, 'data_obat', $data_obat)) {
+            echo 'success';
+            $objFunction->log('1', "table : data_obat, data : " . $data);
+        } else {
+            echo 'fail';
+        }
         break;
     case 'update_harga_data_obat' :
         $id_obat = trim($_REQUEST['id_obat']);
@@ -296,13 +295,10 @@ switch ($request) {
         $data_obat['harga_dasar'] = $ar_harga[0];
         if (isset($ar_harga[1]) && $ar_harga [1] != '')
             $data_obat['harga_jual'] = $ar_harga[1];
-        //echo $id_obat;
         if ($db->update_data($db, 'data_obat', $data_obat, " id_data_obat = '$id_obat'"))
-            echo
-            'success';
+            echo 'success';
         else
-            echo
-            'fail';
+            echo 'fail';
         break;
 
     //CRUD Data User
@@ -318,20 +314,16 @@ switch ($request) {
         $data['update_at'] = $objFunction->get_datetime_sql();
         //print_r($data);
         if ($db->update_data($db, 'user', $data, 'id_user = "' . $id . '"'))
-            echo
-            'success';
+            echo 'success';
         else
-            echo
-            'fail';
+            echo 'fail';
         break;
     case 'delete_data_user' :
         $data['id_user'] = $_REQUEST['data'];
         if ($db->delete_data($db, 'user', 'id_user = "' . $data ['id_user'] . '"'))
-            echo
-            'success';
+            echo 'success';
         else
-            echo
-            'fail';
+            echo 'fail';
         break;
     case 'add_data_user' :
         $data_request = $_REQUEST['data'];
@@ -344,11 +336,9 @@ switch ($request) {
         $data['role'] = $ar_data[3];
         //print_r($data_obat);
         if ($db->add_data($db, 'user', $data))
-            echo
-            'success';
+            echo 'success';
         else
-            echo
-            'fail';
+            echo 'fail';
         break;
 
 

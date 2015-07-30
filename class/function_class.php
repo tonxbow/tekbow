@@ -14,6 +14,7 @@ class myfunction {
             $_SESSION['role'] = $getUser[0]['role'];
             $data['last_login'] = self::get_datetime_sql();
             $db->update_data($db, 'user', $data, 'id_user="' . $_SESSION['id_user'] . '"');
+            self::log('4', "Login");
             return true;
         } else {
             return false;
@@ -21,6 +22,7 @@ class myfunction {
     }
 
     public function logout() {
+        self::log('4', "Logout");
         session_unset();
         session_destroy();
         return true;
@@ -30,6 +32,18 @@ class myfunction {
         if (!(isset($_SESSION['logged']) && $_SESSION['logged'] != '' && $_SESSION['logged'] == 'apotek')) {
             header("Location: login.php");
         }
+    }
+
+    public function log($action, $data_action) {//
+        //1:Add,2:Update,3:Delete,4:Akses
+        global $db;
+        $data ['id_user'] = $_SESSION['id_user'];
+        $data ['action'] = $action;
+        $data ['data'] = $data_action;
+        if ($db->add_data($db, 'audit_trail', $data))
+            return true;
+        else
+            return false;
     }
 
     public function createID($table, $field, $prefix, $jumlahrandom, $maxnumber) {//
