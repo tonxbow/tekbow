@@ -13,6 +13,7 @@ $printer = new printer();
 
 $request = $objEnkrip->decode($_REQUEST['request']);
 $satuan = $db->get_data($db, 'satuan', '*', '', 'nama ASC', '');
+
 switch ($request) {
     case 'data_obat' :
         $tbl = 'data_obat';
@@ -283,6 +284,61 @@ switch ($request) {
             );
 
         </script>
+        <?php
+        break;
+    case 'detail_transaksi':
+        $obat = $db->get_data($db, 'data_obat', '*', '', 'nama ASC', '');
+        $id = $objEnkrip->decode($_REQUEST['id_transaksi']);
+        $dataKolom = array('Obat', 'Jumlah', 'Satuan', 'Harga'); //Judul Kolom
+        $dataField = array('id_data_obat', 'jumlah', 'satuan', 'harga_jual');
+        ?>
+        <table class = "table table-striped table-hover table-bordered display" cellspacing = "0" style = "font-size: 12px;color: #000;">
+            <thead>
+                <tr>
+                    <?php
+                    echo '<th class="text-center">No</th>';
+                    for ($i = 0; $i < count($dataKolom); $i++) {
+                        echo '<th class="text-center">' . $dataKolom[$i] . '</th>';
+                    }
+                    ?>
+                </tr>
+            </thead>
+
+            <tbody id="tbl_body">
+                <?php
+                //
+                $crt = 'id_transaksi = "' . $id . '"';
+                $ArrayDt = $db->get_data($db, 'transaksi_detail', '*', $crt, '', '');
+
+                for ($i = 0; $i < count($ArrayDt); $i++) {
+                    $no = $i + 1;
+                    //edit module
+                    echo '<tr>';
+                    echo '<td width="40px" class="text-center">' . $no . '</td>';
+                    for ($x = 0; $x < count($dataField); $x++) {
+
+                        switch ($dataField[$x]) {
+                            case 'id_data_obat' :
+                                echo '<td class="text-left" >' . $objFunction->search_by($obat, 'id_data_obat', $ArrayDt[$i][$dataField[$x]], 'nama') . '</td>';
+                                break;
+                            case 'harga_jual' : echo '<td class="text-right" >' . $objFunction->set_rupiah($ArrayDt[$i][$dataField[$x]]) . '</td>';
+                                break;
+                            case 'jumlah' : echo '<td class="text-center" >' . $ArrayDt[$i][$dataField[$x]] . '</td>';
+                                break;
+                            case 'satuan' :
+                                echo '<td class="text-center" >' . $objFunction->search_by($satuan, 'id_satuan', $ArrayDt[$i][$dataField[$x]], 'nama') . '</td>';
+                                break;
+                            default:
+                                echo '<td class="text-center">' . $ArrayDt[$i][$dataField[$x]] . '</td>';
+                                break;
+                        }
+                    }
+
+                    echo '</tr>';
+                }
+                ?>
+            </tbody>
+        </table>
         <?php
         break;
 }

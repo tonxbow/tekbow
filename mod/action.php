@@ -181,6 +181,52 @@ switch ($request) {
             echo '3';
 
         break;
+    case 'update_database' :
+        $data_request = $_REQUEST['data'];
+        $ar_data = explode(';', $data_request);
+        $data['server'] = $ar_data[0];
+        $data['user'] = $ar_data[1];
+        $data['password'] = $ar_data[2];
+        $data['database'] = $ar_data[3];
+        $file = "";
+        $file .= "<?php \r\n";
+        $file .= '$dbserver = "' . $data['server'] . '";' . "\r\n";
+        $file .= '$dbuser = "' . $data['user'] . '";' . "\r\n";
+        $file .= '$dbpass = "' . $data['password'] . '";' . "\r\n";
+        $file .= '$dbname = "' . $data['database'] . '";' . "\r\n";
+        $file .= "?>";
+        //print_r($data);
+        if (file_put_contents('setting.php', $file)) {
+            echo '1';
+        } else
+            echo '2';
+        break;
+    case 'update_setting' :
+        $data_request = $_REQUEST['data'];
+        $tipe = $_REQUEST['tipe'];
+
+        $ar_data = explode(';', $data_request);
+        if ($tipe == '1') {
+            $data['margin_umum'] = $ar_data[0];
+            $data['margin_toko'] = $ar_data[1];
+            $data['pajak'] = $ar_data[2];
+        }
+        if ($tipe == '2') {
+            $data['nama_toko'] = $ar_data[0];
+            $data['alamat1'] = $ar_data[1];
+            $data['alamat2'] = $ar_data[2];
+            $data['telp'] = $ar_data[3];
+        }
+        if ($tipe == '3') {
+            $data['port'] = $ar_data[0];
+            $data['baudrate'] = $ar_data[1];
+        }
+        if ($db->update_data($db, 'setting', $data, 'id_setting = "' . 1 . '"'))
+            echo '1';
+        else
+            echo '2';
+
+        break;
     //CRUD Data OBAT
     case 'update_data_obat' :
         $data = $_REQUEST['data'];
@@ -244,6 +290,21 @@ switch ($request) {
             echo
             'fail';
         break;
+    case 'update_harga_data_obat' :
+        $id_obat = trim($_REQUEST['id_obat']);
+        $ar_harga = explode(';', trim($_REQUEST['harga']));
+        $data_obat['harga_dasar'] = $ar_harga[0];
+        if (isset($ar_harga[1]) && $ar_harga [1] != '')
+            $data_obat['harga_jual'] = $ar_harga[1];
+        //echo $id_obat;
+        if ($db->update_data($db, 'data_obat', $data_obat, " id_data_obat = '$id_obat'"))
+            echo
+            'success';
+        else
+            echo
+            'fail';
+        break;
+
     //CRUD Data User
     case 'update_data_user' :
         $data_request = $_REQUEST['data'];
@@ -289,20 +350,7 @@ switch ($request) {
             echo
             'fail';
         break;
-    case 'update_harga_data_obat' :
-        $id_obat = trim($_REQUEST['id_obat']);
-        $ar_harga = explode(';', trim($_REQUEST['harga']));
-        $data_obat['harga_dasar'] = $ar_harga[0];
-        if (isset($ar_harga[1]) && $ar_harga [1] != '')
-            $data_obat['harga_jual'] = $ar_harga[1];
-        //echo $id_obat;
-        if ($db->update_data($db, 'data_obat', $data_obat, " id_data_obat = '$id_obat'"))
-            echo
-            'success';
-        else
-            echo
-            'fail';
-        break;
+
 
     case 'barang_masuk':
         $ret = 'success';

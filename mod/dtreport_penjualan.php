@@ -128,7 +128,7 @@ else
                                     }
                                 }
 
-                                echo '<td style="whitespace:nowrap;" class="text-center"><button onclick="show_detail(\'' . $objEnkrip->encode($ArrayDt[$i][$criteriaField]) . '\')">Detail</button>
+                                echo '<td style="whitespace:nowrap;" class="text-center"><button onclick="get_content(\'' . $objEnkrip->encode($ArrayDt[$i][$criteriaField]) . '\')">Detail</button>
                                     </td>
                                     </tr>';
                             }
@@ -181,10 +181,11 @@ else
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Detail</h4>
+                <h4 class="modal-title">Detail Transaksi</h4>
             </div>
             <div class="modal-body">
-                <textarea id="txt_struk" style="width: 100%; resize: none; color: #000;" readonly rows="10"></textarea>
+               <!-- <textarea id="txt_struk" style="width: 100%; resize: none; color: #000;" readonly rows="10"></textarea>-->
+                <div id="data_content"></div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary btn-block" id='btn_close'>Close</button>
@@ -221,6 +222,22 @@ else
                     $('#txt_struk').val(result);
                 });
         $('#mod_detail').modal("show");
+    }
+
+    function get_content(id)
+    {
+        $('#loading').show();
+
+        $.ajax({
+            type: "GET",
+            url: "mod/content.php?request=<?php echo $objEnkrip->encode('detail_transaksi'); ?>&id_transaksi=" + id,
+            success: function (data) {
+
+                $('#data_content').empty().append(data);
+                $('#mod_detail').modal("show");
+
+            }
+        });
     }
 
     $('#btn_close').on("click", function () {

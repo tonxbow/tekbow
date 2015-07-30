@@ -24,7 +24,7 @@ $objFunction->checkLogin();
         <meta name="description" content="">
         <meta name="author" content="tonx">
         <link rel="shortcut icon" href="images/favicons.png">
-        <title>TekBow</title>
+        <title>TechBow : Tobat V.1.0</title>
 
         <link href="css/bootstrap.min.css" rel="stylesheet">
 

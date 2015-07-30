@@ -47,16 +47,18 @@ class printer {
     }
 
     public function PrintHeader() {
+        global $db;
+        $data = $db->get_data($db, 'setting', '*', '', '', '');
         $header = "";
         $header .= self::AlignCenter();
         $header .= self::BigText();
-        $header .= "TOKO OBAT FIRDAUS";
+        $header .= $data[0]['nama_toko'];
         $header .= self::PrintEnter();
         $header .= self::TextNormal();
         $header .= self::AlignCenter();
-        $header .= "Lantai.1 Blok.E1  no.36\r\n";
-        $header .= "Pasar Cermat Batujajar\r\n";
-        $header .= "Hp: 08xx-xxxx-xxxx\r\n";
+        $header .= $data[0]['alamat1'] . "\r\n";
+        $header .= $data[0]['alamat2'] . "\r\n";
+        $header .= "Telp:" . $data[0]['telp'] . "\r\n";
         //$header .= self::PrintBar();
         $header .= self::TextNormal();
         $header .= self::PrintEnter();
