@@ -7,16 +7,16 @@ $username = $_SESSION['username'];
 <?php
 $menu = array('POS', 'Obat Masuk', 'Report', 'Data Referensi');
 $authmenu = array(
-    array('0', '1'), //Dashboard
-    array('0', '1'), //Master Stock
-    array('0', '1'), //Report
-    array('0', '1'), //Document
+    array('1', '2'), //POS
+    array('1', '2'), //Obat Masuk
+    array('1', '2'), //Report
+    array('1'), //Document
 );
 $submenu = array(
     array(), //Dashboard
     array(), //Master Stock
     array('Report Penjualan', 'Report Obat'), //Report
-    array('Data Obat', 'Satuan', 'User', 'Setting'), //Document
+    array('Data Obat', 'User', 'Setting'), //Document
 );
 
 $indexActiveMenu = -1;
@@ -127,11 +127,13 @@ function createFileName($filename) {
                     <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu extended logout">
-                    <li><a href="index.php?ask=<?php echo $objEnkrip->encode('ubahpass.php'); ?>"><i class=" fa fa-suitcase"></i> Ubah Password</li>
+                    <li><a href="index.php?ask=<?php echo $objEnkrip->encode('dtubah_password.php'); ?>"><i class=" fa fa-suitcase"></i> Ubah Password</li>
                     <li><a href="login.php?ask=logout"><i class="fa fa-key"></i> Log Out</a></li>
                 </ul>
             </li>
         </ul>
     </div>
 </header>
+
+
 

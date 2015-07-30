@@ -1,6 +1,7 @@
 <?php
 session_start();
 //Include
+
 include 'mod/setting.php';
 require_once ('class/database_class.php');
 require_once ('class/printer_class.php');

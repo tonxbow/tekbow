@@ -50,32 +50,6 @@ $classInput = 'col-xs-8';
 $data_obat = $db->get_data($db, 'data_obat', '*', '', 'nama ASC', '');
 $satuan = $db->get_data($db, 'satuan', '*', '', '', '');
 
-/* ----------------------------------
- * action for action-data
- * ---------------------------------- */
-if (isset($_GET['p']) && trim($_GET['p']) != '' && !isset($_POST['btnSubmit'])) {
-    $reqP = $objEnkrip->decode(trim($_GET['p']));
-    if (substr($reqP, 0, 1) == 'y') {
-        $jenisPesan = 'alert-success';
-        $statusPesan = 'Berhasil';
-        $isiPesan = 'Data berhasil di';
-    } else {
-        $jenisPesan = 'alert-danger';
-        $statusPesan = 'Gagal';
-        $isiPesan = 'Data Gagal di';
-    }
-
-    switch (substr($reqP, 1)) {
-        case 'add': $isiPesan .= 'tambah';
-            break;
-        case 'edit': $isiPesan .='ubah';
-            break;
-        case 'del': $isiPesan .='hapus';
-            break;
-        default:
-    }//nsw
-}
-
 $crt = '';
 ?>
 
@@ -91,16 +65,6 @@ $crt = '';
                 <div class="adv-table editable-table ">
                     <div class="clearfix">
                         <button class="btn btn-primary " id="btn_add" ><i class="fa fa-plus-circle"></i> Tambah Data Obat</button>
-                        <?php if ($stsCetak) { ?>
-                            <div class="btn-group pull-right">
-                                <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown">Tools <i class="fa fa-angle-down"></i></button>
-                                <ul class="dropdown-menu pull-right">
-                                    <li><a target="_blank" href="cetak/ctkpxdata_sales_eksekutif.php?ask=<?php echo $objEnkrip->encode('pdf') ?>">Save as PDF</a></li>
-                                    <li><a target="_blank" href="cetak/ctkpxdata_sales_eksekutif.php?ask=<?php echo $objEnkrip->encode('xls') ?>">Export To Excel</a></li>
-
-                                </ul>
-                            </div>
-                        <?php } ?>
                     </div>
 
                     <!--  RESPONSE MESSAGE-->
@@ -139,6 +103,7 @@ $inputClass = "col-sm-9";
             </div>
             <div class="modal-body" style="color:#000;">
                 <div  class="form-horizontal">
+
                     <div class = "form-group">
                         <label for = "" class = "<?php echo $labelClass; ?>">Kode :</label>
                         <div class = "<?php echo $inputClass; ?>"><input type = "text" name = "kode_obat" class = "form-control" id = "tb_new_kode_obat"></div>
@@ -216,6 +181,7 @@ $inputClass = "col-sm-9";
                             <div class = "col-sm-3"><input min="0"  type = "number" name = "harga_jual" class = "form-control" id = "tb_new_harga_jual" value="0"></div>
                         </div>
                         <input style="display:none;" id="txt_act">
+                        <input style="display:none;" id="tb_new_id_obat">
                     </div>
                     <div class = "form-group">
                         <p style="font-size: 15px; color: red; text-align: center;" id="txt_new_keterangan"></p>
@@ -285,7 +251,7 @@ $inputClass = "col-sm-9";
         {
             //input_new_false("Nama Harus Diisi !");
             input_new_false("Nama Harus Diisi Dengan Benar");
-            $('#tb_new_nama_obat').focus();
+            //$('#tb_new_nama_obat').focus();
             status = false;
         }
 
@@ -310,7 +276,8 @@ $inputClass = "col-sm-9";
             status = false;
         }
 
-        if (action == 1)
+        var act = $('#txt_act').text();
+        if (action == 1 && act != "edit")
         {
             var i;
             for (i = 0; i < obat.length; i++)
@@ -330,6 +297,7 @@ $inputClass = "col-sm-9";
 
         if (status)
             $('#btn_new_simpan').slideDown();
+
         return status
     }
 
@@ -368,6 +336,7 @@ $inputClass = "col-sm-9";
     function get_content()
     {
         $('#loading').show();
+
         $.ajax({
             type: "GET",
             url: "mod/content.php?request=<?php echo $objEnkrip->encode('data_obat'); ?>",
@@ -378,13 +347,23 @@ $inputClass = "col-sm-9";
 
             }
         });
+        get_obat();
     }
 
     jQuery(document).ready(function () {
-
+        $(document).on("change keyup", '#tb_new_kode_obat, #tb_new_nama_obat, #tb_new_jumlah_satuan', function ()
+        {
+            input_new_check('1');
+        });
         //init_table();
         $('#btn_add').on("click", function ()
         {
+            $('#tb_new_kode_obat').val('');
+            $('#tb_new_nama_obat').val('');
+            $('#tb_new_jumlah_satuan').val(1);
+            $('#tb_new_harga_beli').val(0);
+            $('#tb_new_harga_jual').val(0);
+            $('#tb_new_nama_obat').focus();
             $('#txt_act').text("add");
             $('#txt_judul_modal').text("Tambah Data Obat");
             $('#mod_add_data').modal("show");
@@ -392,9 +371,10 @@ $inputClass = "col-sm-9";
         });
 
 
+
         $('#btn_new_simpan').on('click', function () {
             var act = $('#txt_act').text();
-            if (input_new_check('1') || act == 'edit')
+            if (input_new_check('1'))
             {
                 var kode = check_string($('#tb_new_kode_obat').val());
                 var nama = check_string($('#tb_new_nama_obat').val());
@@ -403,7 +383,7 @@ $inputClass = "col-sm-9";
                 var satuan_kecil = $('#cb_new_satuan_kecil_obat').val();
                 var harga_beli = check_string($('#tb_new_harga_beli').val());
                 var harga_jual = check_string($('#tb_new_harga_jual').val());
-                var id_obat = search_by(obat, 'barcode', kode, 'id_data_obat');
+                var id_obat = $('#tb_new_id_obat').text();
                 //var group = $('#cb_new_group_obat').val();
                 //var jenis = $('#cb_new_jenis_obat').val();
                 //var tipe = $('#cb_new_type_obat').val();
@@ -429,7 +409,9 @@ $inputClass = "col-sm-9";
                                 alert("Penyimpanan Gagal, Keterangan : \n\n " + result);
                             else
                             {
+                                $('#mod_add_data').modal("hide");
                                 get_content();
+                                alert("Berhasil !");
                             }
                         });
             }

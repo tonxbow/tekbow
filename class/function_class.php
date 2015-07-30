@@ -1,16 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of function_class
- *
- * @author tonx
- */
 class myfunction {
 
     public function login($u, $p) {
@@ -23,6 +12,8 @@ class myfunction {
             $_SESSION['id_user'] = $getUser[0]['id_user'];
             $_SESSION['username'] = $getUser[0]['username'];
             $_SESSION['role'] = $getUser[0]['role'];
+            $data['last_login'] = self::get_datetime_sql();
+            $db->update_data($db, 'user', $data, 'id_user="' . $_SESSION['id_user'] . '"');
             return true;
         } else {
             return false;
@@ -57,18 +48,22 @@ class myfunction {
     }
 
     public function get_datetime_sql() {
+        date_default_timezone_set('Asia/Jakarta');
         return date('Y-m-d H:i:s');
     }
 
     public function get_date() {
+        date_default_timezone_set('Asia/Jakarta');
         return date('Ymd');
     }
 
     public function get_datetime() {
+        date_default_timezone_set('Asia/Jakarta');
         return date('YmdHis');
     }
 
     public function get_daydate() {
+        date_default_timezone_set('Asia/Jakarta');
         return date('Y-m-d');
     }
 
@@ -181,8 +176,8 @@ class myfunction {
         return $newDate;
     }
 
-    function search_by($array,$field_by, $field_content, $field_search) {
-        
+    function search_by($array, $field_by, $field_content, $field_search) {
+
         $result = '';
         for ($i = 0; $i < count($array); $i++) {
             if ($field_content == $array[$i][$field_by]) {
