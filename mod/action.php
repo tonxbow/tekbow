@@ -164,22 +164,19 @@ switch ($request) {
         break;
     case 'update_password' :
         $data = $_REQUEST['data'];
-        //echo ($data);
         $ar_data = explode(';', $data);
         $data_user['password'] = md5($ar_data[1]);
         $id_user = $_SESSION['id_user'];
         $password_lama = md5($ar_data[0]);
         $status = $db->get_curr_data($db, 'user', 'id_user', 'password = "' . $password_lama . '" AND id_user = "' . $id_user . '"');
-        //echo $status;
-        //echo "STATUS : " . $status . ">>" . count($status);
         if ($status != "") {
-            if ($db->update_data($db, 'user', $data_user, 'id_user = "' . $id_user . '"'))
+            if ($db->update_data($db, 'user', $data_user, 'id_user = "' . $id_user . '"')) {
                 echo '1';
-            else
+                $objFunction->log('2', "table : user, [ubah password] data : " . $data);
+            } else
                 echo '2';
         } else
             echo '3';
-
         break;
     case 'update_database' :
         $data_request = $_REQUEST['data'];
@@ -204,7 +201,7 @@ switch ($request) {
     case 'update_setting' :
         $data_request = $_REQUEST['data'];
         $tipe = $_REQUEST['tipe'];
-        $objFunction->log('2', "table : setting, data : " . $data_request . ", tipe : " . $tipe);
+
 
         $ar_data = explode(';', $data_request);
         if ($tipe == '1') {
@@ -222,9 +219,10 @@ switch ($request) {
             $data['port'] = $ar_data[0];
             $data['baudrate'] = $ar_data[1];
         }
-        if ($db->update_data($db, 'setting', $data, 'id_setting = "' . 1 . '"'))
+        if ($db->update_data($db, 'setting', $data, 'id_setting = "' . 1 . '"')) {
             echo '1';
-        else
+            $objFunction->log('2', "table : setting, data : " . $data_request . ", tipe : " . $tipe);
+        } else
             echo '2';
 
         break;
@@ -243,10 +241,6 @@ switch ($request) {
         $data_obat['harga_jual'] = $ar_data[6];
         $data_obat['id_data_obat'] = $ar_data[7];
         $data_obat['update_at'] = $objFunction->get_datetime_sql();
-        //$data_obat['id_group_obat'] = '0'; //$objEnkrip->decode($ar_data[7]);
-        //$data_obat['id_jenis_obat'] = '0'; //$objEnkrip->decode($ar_data[8]);
-        //$data_obat['id_type_obat'] = '0'; //$objEnkrip->decode($ar_data[9]);
-        //print_r($data_obat);
 
         if ($db->update_data($db, 'data_obat', $data_obat, 'id_data_obat = "' . $data_obat ['id_data_obat'] . '"')) {
             $objFunction->log('2', "table : data_obat, data : " . $data);
@@ -313,16 +307,18 @@ switch ($request) {
         $id = $ar_data[4];
         $data['update_at'] = $objFunction->get_datetime_sql();
         //print_r($data);
-        if ($db->update_data($db, 'user', $data, 'id_user = "' . $id . '"'))
+        if ($db->update_data($db, 'user', $data, 'id_user = "' . $id . '"')) {
             echo 'success';
-        else
+            $objFunction->log('2', "table : user, data : " . $data_request);
+        } else
             echo 'fail';
         break;
     case 'delete_data_user' :
         $data['id_user'] = $_REQUEST['data'];
-        if ($db->delete_data($db, 'user', 'id_user = "' . $data ['id_user'] . '"'))
+        if ($db->delete_data($db, 'user', 'id_user = "' . $data ['id_user'] . '"')) {
             echo 'success';
-        else
+            $objFunction->log('3', "table : user, id : " . $data['id_user']);
+        } else
             echo 'fail';
         break;
     case 'add_data_user' :
@@ -335,9 +331,10 @@ switch ($request) {
         $data['password'] = $ar_data[2];
         $data['role'] = $ar_data[3];
         //print_r($data_obat);
-        if ($db->add_data($db, 'user', $data))
+        if ($db->add_data($db, 'user', $data)) {
             echo 'success';
-        else
+            $objFunction->log('1', "table : user, data : " . $data_request);
+        } else
             echo 'fail';
         break;
 

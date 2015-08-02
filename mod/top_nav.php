@@ -91,8 +91,8 @@ function createFileName($filename) {
 <header class="header fixed-top clearfix">
     <!--logo start-->
     <div class="brand" style="width:180px; background-color: #aaa;">
-        <a href="#" class="logo">
-            <img style="height:50px;" alt="brand" src="images/brand.png" alt="">
+        <a class="logo">
+            <img style="height:50px;" alt="brand" src="images/brand.png" alt="" onclick="location.reload()">
         </a>
 
     </div>

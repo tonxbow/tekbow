@@ -363,10 +363,11 @@ $inputClass = "col-sm-9";
             $('#tb_new_jumlah_satuan').val(1);
             $('#tb_new_harga_beli').val(0);
             $('#tb_new_harga_jual').val(0);
-            $('#tb_new_nama_obat').focus();
+
             $('#txt_act').text("add");
             $('#txt_judul_modal').text("Tambah Data Obat");
             $('#mod_add_data').modal("show");
+            $('#tb_new_kode_obat').focus();
             //get_content();
         });
 
