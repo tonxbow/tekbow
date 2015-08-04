@@ -8,7 +8,7 @@ $satuan = $db->get_data($db, 'satuan', '*', '', '', '');
 $setting = $db->get_data($db, 'setting', '*', '', '', '');
 //$objFunction->debugArray($data_obat);
 //$objFunction->debugArray($satuan);
-
+$running_text = "Selamat Datang " . $_SESSION['username'] . " Di Toko Obat Firdaus";
 
 $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 'jumlah_satuan_kecil', 'harga_jual', 'stock_masuk', 'stock_keluar');
 ?>
@@ -194,7 +194,7 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
                 <th  colspan="3" style="width: 50%; vertical-align: middle; text-align: left;"><i class="fa fa-file"></i> id transaksi : <b id="id_trx"></b></th>
                 <th  colspan="3" style="width: 50%; vertical-align: middle; text-align: left;"><i class="fa fa-print"></i> Printer : <?php echo $setting[0]['port'] . ',' . $setting[0]['baudrate'] ?></th>
 
-                <th  style="width: 250px; white-space: nowrap;"rowspan="2"><div style="font-size: 20px;" id="datetime">-</div></th>
+                <th  style="width: 250px; white-space: nowrap;"rowspan="2"><div style="font-size: 20px;" >-</div></th>
 
                 </tr>
                 </tfoot>
@@ -202,8 +202,20 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
         </div>
     </div>
     <div style="width: 100%; border: #999 solid 1px"></div>
+
+    <div style="text-align: center;font-family: sans-serif;font-size: 100px; margin-top: 50px;" id="dashboard">
+        <b style="font-size: 40px;"><?php echo $objFunction->get_date_format($objFunction->get_daydate()); ?></b>
+        <br/>
+        <i class="fa fa-clock-o"></i>
+        <b id="datetime"></b>
+        <div style="font-size: 20px;"> </div>
+        <b style="font-size: 20px; color: blue; " id="dash_grand_total"></b>
+        <br/>
+        <a href="login.php?ask=<?php echo $objEnkrip->encode('closing') . '&id=' . $objEnkrip->encode($_SESSION['id_user']); ?>"><button class="btn btn-info" style="width: 330px; font-size: 20px; margin-top: 10px;">Closing</button></a>
+    </div>
+
     <div style="width: 95%; background-color: #999;height: 40px;padding-top: 10px;position: absolute;top: 720px;">
-        <marquee style="font-size: 15px; color: #fff;">Selamat Datang di apotek Firdaus</marquee>
+        <marquee style="font-size: 15px; color: #fff;"><div id="running_text"></div></marquee>
     </div>
 </div>
 
@@ -233,12 +245,13 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
 //INISALISASI AWAL
     var obat = <?php echo json_encode($data_obat, JSON_PRETTY_PRINT) ?>;
     var satuan = <?php echo json_encode($satuan, JSON_PRETTY_PRINT) ?>;
-
+    $('#running_text').text("Hi " + "<?php echo ucwords($_SESSION['username']); ?> " + ", Selamat Datang Di Aplikasi Tobat V.1.0 !");
     input_hide();
     $('#view_pos').hide();
     $('#btn_bayar').hide();
     $('#loading').hide();
     $('#btn_cancel_transaksi').hide();
+    get_total();
     //$('#nama_obat').select2();
 
 //SHORTCUT KEYBOARD
@@ -309,7 +322,7 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
         if (Month.length == 1)
             Month = '0' + Month;
         if (Datez.length == 1)
-            Month = '0' + Datez;
+            Datez = '0' + Datez;
 
         return currentTime.getFullYear() + '-' + Month + '-' + Datez;
     }
@@ -377,8 +390,13 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
         }
         else
         {
+
             //console.log("masuk slide Up");
-            input_hide();
+            if (val_obat == '' && satuan == '0' && isNaN(parseInt(jumlah)) && jumlah <= 0)
+            {
+                //console.log("masuk");
+                input_hide();
+            }
             //$('#btn_tambah_obat').slideUp();
         }
 
@@ -509,11 +527,20 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
         });
 
     }
+    function get_total()
+    {
+        var url = "mod/action.php?request=<?php echo $objEnkrip->encode('get_grand_total'); ?>";
+        $.getJSON(url, function (result) {
+            $('#dash_grand_total').text("Total Transaksi Hari Ini : " + result['total']);
+        });
+
+    }
 
     function new_transaksi()
     {
 
         $('#btn_new_transaksi').hide();
+        $('#dashboard').hide();
         $('#btn_cancel_transaksi').show();
         get_id_trx();
         $('#sts_trx').attr("disabled", true);
@@ -614,8 +641,10 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
         $('#view_pos').slideUp();
         $('#btn_new_transaksi').show();
         $('#btn_cancel_transaksi').hide();
+        $('#dashboard').show();
         $('#tgl_trx').val(get_date());
         $('#sts_trx').removeAttr("disabled");
+        get_total();
         reset_pos();
     }
 
@@ -791,6 +820,7 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
         switch (ev.keyCode)
         {
             case 13 :
+                input_show();
                 add_obat();
 
                 break;
@@ -1023,7 +1053,7 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
         var currentTimeString = currentHours + ":" + currentMinutes + ":" + currentSeconds + " " + timeOfDay;
 
 
-        $("#datetime").html(currentTimeString);
+        $("#datetime").text(currentTimeString);
 
     }
 

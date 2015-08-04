@@ -5,18 +5,20 @@ $username = $_SESSION['username'];
 ?>
 
 <?php
-$menu = array('POS', 'Obat Masuk', 'Report', 'Data Referensi');
+$menu = array('POS', 'Obat Masuk', 'Data Obat', 'Report', 'Data Referensi');
 $authmenu = array(
     array('1', '2'), //POS
     array('1', '2'), //Obat Masuk
+    array('2'),
     array('1', '2'), //Report
-    array('1'), //Document
+    array('1'), //Data Referensi
 );
 $submenu = array(
-    array(), //Dashboard
-    array(), //Master Stock
+    array(), //POS
+    array(), //Obat Masuk
+    array(), //Data Obat
     array('Report Penjualan', 'Report Obat'), //Report
-    array('Data Obat', 'User', 'Setting'), //Document
+    array('Data Obat', 'User', 'Setting'), //Data Refernesi
 );
 
 $indexActiveMenu = -1;

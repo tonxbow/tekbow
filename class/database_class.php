@@ -83,7 +83,7 @@ class db extends mysqli {
 
             $qs = "UPDATE " . $tbl . " SET " . $value_query;
             $qs.= ($crt != "") ? " WHERE " . $crt : "";
-//echo $qs;
+            // echo $qs;
 //exit();
             if ($result = $conn->query($qs)) {
                 $bOk = true;
@@ -158,9 +158,9 @@ class db extends mysqli {
         $rData = array();
         if ($result = $conn->query($qs)) {
             /* fetch associative array */
-            while ($row = $result->fetch_assoc()) {
-                $rData[] = $row;
-            }
+            //while ($row = $result->fetch_assoc()) {
+            //    $rData[] = $row;
+            //}
         } else {
             die("Query [getCertainData] Error!" . mysqli_error($conn));
         }//nelse

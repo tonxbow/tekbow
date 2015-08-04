@@ -32,6 +32,12 @@ if ($date1 != '' && $date2 != '')
     $crt = " datetime BETWEEN '" . $date1 . "' AND '" . $date2 . "'  + INTERVAL 1 DAY ";
 else
     $crt = " datetime BETWEEN CURDATE() AND CURDATE() + INTERVAL 1 DAY ";
+
+if ($_SESSION['role'] == '2')
+    $crt .= " AND id_user='" . $_SESSION['id_user'] . "'";
+
+$user = $db->get_data($db, 'user', '*', '', '', '');
+$ArrayDt = $db->get_data($db, $tbl, $fldSelect, $crt, 'datetime DESC', '');
 ?>
 
 <!-- page start-->
@@ -45,9 +51,9 @@ else
                     <form method="post" action="#">
                         <?php echo $judul; ?>
                         Tanggal :
-                        <input style="width: 150px; color: #000; text-align: center;"  name="date1" id="date1" value="<?php echo ($date1 != '' ? $date1 : ''); ?>">
+                        <input style="width: 150px; color: #000; text-align: center;"  name="date1" id="date1" >
                         s.d
-                        <input style="width: 150px; color: #000; text-align: center;"  name="date2" id="date2" value="<?php echo ($date2 != '' ? $date2 : ''); ?>">
+                        <input style="width: 150px; color: #000; text-align: center;"  name="date2" id="date2" >
                         <button class="btn btn-danger " id="btn_show" type="submit">Show</button>
                     </form>
                 </div>
@@ -71,7 +77,7 @@ else
                     if ($date1 == '' && $date2 == '')
                         $subtitel = "Laporan Transaksi Hari Ini";
                     else
-                        $subtitel = "Laporan Transaksi Tanggal $date1 s.d " . $date2;
+                        $subtitel = "Laporan Transaksi Penjualan<br/><br/>" . $objFunction->get_date_format($date1) . " s.d " . $objFunction->get_date_format($date2);
                     ?>
                     <div style="text-align:center;color: #000;" ><h4><?php echo $subtitel; ?></h4></div>
                     <table class="table table-striped table-hover table-bordered display" id="table-data"  cellspacing="0" style="font-size: 12px;color: #000;">
@@ -90,8 +96,7 @@ else
                             <?php
                             //
 
-                            $user = $db->get_data($db, 'user', '*', '', '', '');
-                            $ArrayDt = $db->get_data($db, $tbl, $fldSelect, $crt, 'datetime DESC', '');
+
                             $grand_total = 0;
 
                             for ($i = 0; $i < count($ArrayDt); $i++) {
@@ -128,9 +133,11 @@ else
                                     }
                                 }
 
-                                echo '<td style="whitespace:nowrap;" class="text-center"><button onclick="get_content(\'' . $objEnkrip->encode($ArrayDt[$i][$criteriaField]) . '\')">Detail</button>
-                                    </td>
-                                    </tr>';
+                                echo '<td style="whitespace:nowrap;" class="text-center">'
+                                . '<button onclick="get_content(\'' . $objEnkrip->encode($ArrayDt[$i][$criteriaField]) . '\')">Detail</button>';
+                                if ($date1 == '' && $date2 == '')
+                                    echo '<button onclick="retur_barang(\'' . $objEnkrip->encode($ArrayDt[$i][$criteriaField]) . '\')">Retur</button>';
+                                echo '</td></tr>';
                             }
                             ?>
                         </tbody>
@@ -238,6 +245,27 @@ else
 
             }
         });
+    }
+
+    function retur_barang(id)
+    {
+        var r = confirm("Anda Yakin Me-Retur Transaksi ? ");
+        if (r == true) {
+            $.ajax({
+                type: "GET",
+                url: "mod/action.php?request=<?php echo $objEnkrip->encode('retur_barang'); ?>&id=" + id,
+                success: function (data) {
+
+                    if (data == "berhasil")
+                    {
+                        alert('Berhasil !')
+                        location.reload();
+                    }
+                    else
+                        alert('Gagal !');
+                }
+            });
+        }
     }
 
     $('#btn_close').on("click", function () {

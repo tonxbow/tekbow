@@ -186,7 +186,7 @@ class myfunction {
 
     public function get_date_format($date) {
         $originalDate = $date;
-        $newDate = date("d/m/Y", strtotime($originalDate));
+        $newDate = date("d M Y", strtotime($originalDate));
         return $newDate;
     }
 

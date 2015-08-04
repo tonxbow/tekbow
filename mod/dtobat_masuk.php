@@ -208,7 +208,7 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
                         <th  colspan="2" style="width: 300px; white-space: nowrap;"><div style="font-size: 20px;" id="total_item">Total Item : 0</div></th>
                 <th  colspan="3" style="width: 50%; vertical-align: middle; text-align: left;"><i class="fa fa-file"></i> id transaksi : <b id="id_trx"></b></th>
                 <th  colspan="3" style="width: 50%; vertical-align: middle; text-align: left;"><div style="font-size: 15px; color: red;" >Grand Total : <b id="grand_total">Rp. 0</b></div></th>
-                <th  style="width: 250px; white-space: nowrap;"rowspan="2"><div style="font-size: 20px;" id="datetime">-</div></th>
+                <th  style="width: 250px; white-space: nowrap;"rowspan="2"><div style="font-size: 20px;">-</div></th>
                 </tr>
                 </tfoot>
             </table>
@@ -216,6 +216,12 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
             <div class="col-sm-3"><input type="text" id="tb_penerima" class="form-control" value="<?php echo $objFunction->search_by($user, 'id_user', $_SESSION['id_user'], 'nama'); ?>"></div>
             <div class="col-sm-offset-4 col-sm-4"><button class="btn btn-primary btn-block" id="btn_simpan_transaksi">Simpan</button></div>
         </div>
+    </div>
+    <div style="text-align: center;font-family: sans-serif;font-size: 100px; margin-top: 50px;" id="dashboard">
+        <b style="font-size: 40px;"><?php echo $objFunction->get_date_format($objFunction->get_daydate()); ?></b>
+        <br/>
+        <i class="fa fa-clock-o"></i>
+        <b id="datetime"></b>
     </div>
 
 </div>
@@ -287,18 +293,18 @@ $inputClass = "col-sm-9";
                                 <select class="form-control" name="satuan_besar_obat" id="cb_new_satuan_besar_obat">
                                     <?php
                                     for ($i = 0; $i < count($satuan); $i++) {
-                                        echo '<option value = "' . $objEnkrip->encode($satuan[$i]['id_satuan']) . '">' . $satuan[$i]['nama'] . '</option>';
+                                        echo '<option value = "' . $satuan[$i]['id_satuan'] . '">' . $satuan[$i]['nama'] . '</option>';
                                     }
                                     ?>
                                 </select>
                             </div>
                             <label for = "" class = "lbl col-sm-1 text-right">Berisi </label>
-                            <div class = "col-sm-2"><input min="0" type = "number" name = "jumlah_satuan" class = "form-control" id = "tb_new_jumlah_satuan"></div>
+                            <div class = "col-sm-2"><input min="1" type = "number" name = "jumlah_satuan" class = "form-control" id = "tb_new_jumlah_satuan" value="1"></div>
                             <div class = "col-sm-3">
                                 <select class="form-control" name="satuan_kecil_obat" id="cb_new_satuan_kecil_obat">
                                     <?php
                                     for ($i = 0; $i < count($satuan); $i++) {
-                                        echo '<option value = "' . $objEnkrip->encode($satuan[$i]['id_satuan']) . '">' . $satuan[$i]['nama'] . '</option>';
+                                        echo '<option value = "' . $satuan[$i]['id_satuan'] . '">' . $satuan[$i]['nama'] . '</option>';
                                     }
                                     ?>
                                 </select>
@@ -471,7 +477,7 @@ $inputClass = "col-sm-9";
         if (Month.length == 1)
             Month = '0' + Month;
         if (Datez.length == 1)
-            Month = '0' + Datez;
+            Datez = '0' + Datez;
         return currentTime.getFullYear() + '-' + Month + '-' + Datez;
     }
     jQuery.fn.getIdArray = function () {
@@ -512,7 +518,8 @@ $inputClass = "col-sm-9";
         $("#tb_new_kode_obat").val('');
         $("#tb_new_nama_obat").val('');
         $("#tb_new_jumlah_satuan").val('');
-        $("#btn_new_simpan").slideUp();
+        $('#dashboard').show();
+        //$("#btn_new_simpan").slideUp();
     }
 
     function check_input()
@@ -557,7 +564,7 @@ $inputClass = "col-sm-9";
     {
         $('#txt_new_keterangan').text(pesan);
         //$('#detail_new_obat').slideUp();
-        $('#btn_new_simpan').slideUp();
+        //$('#btn_new_simpan').slideUp();
     }
 
     function remove_row(id)
@@ -651,6 +658,7 @@ $inputClass = "col-sm-9";
 
     function new_transaksi()
     {
+        $('#dashboard').hide();
         $('#btn_new_transaksi').hide();
         $('#btn_cancel_transaksi').show();
         get_id_trx();
@@ -931,18 +939,8 @@ $inputClass = "col-sm-9";
         var harga_jual = $('#tb_new_harga_jual').val();
         var status = true;
         $('#txt_new_keterangan').text("");
-        //console.log(kode);
-        //console.log(nama);
 
-        if (kode == "")
-        {
-            //input_new_false("Kode Harus Diisi !");
-            input_new_false("Kode Harus Diisi");
-            $('#tb_new_kode_obat').focus();
-            status = false;
-        }
-
-        else if (nama == "")
+        if (nama == "")
         {
             //input_new_false("Nama Harus Diisi !");
             input_new_false("Nama Harus Diisi Dengan Benar");
@@ -956,7 +954,6 @@ $inputClass = "col-sm-9";
             $('#tb_new_jumlah_satuan').focus();
             status = false;
         }
-
 
         else if (!check_number(harga_beli))
         {
@@ -973,13 +970,16 @@ $inputClass = "col-sm-9";
         }
 
 
-        if (action == 1)
+        if (action == '1')
         {
             var i;
+
             for (i = 0; i < obat.length; i++)
             {
-                if (obat[i]['nama'] == nama)
+                //console.log(obat[i]['nama']);
+                if (obat[i]['nama'] == nama.toUpperCase())
                 {
+                    //alert("masuk");
                     input_new_false("Nama Obat Sudah Ada !");
                     status = false;
                 }
@@ -991,8 +991,8 @@ $inputClass = "col-sm-9";
             }
         }
 
-        if (status)
-            $('#btn_new_simpan').slideDown();
+        //if (status)
+        //$('#btn_new_simpan').slideDown();
         return status
     }
 
@@ -1053,6 +1053,10 @@ $inputClass = "col-sm-9";
         $.post("mod/action.php", {request: "<?php echo $objEnkrip->encode('barang_masuk'); ?>", data: struk, print: print})
                 .done(function (result) {
                     console.log("Status : " + result);
+                    if (result == "success")
+                        alert("Berhasil");
+                    else
+                        alert("Gagal");
                 });
         end_transaksi();
         $('#mod_print_preview').modal("hide");
@@ -1181,6 +1185,7 @@ $inputClass = "col-sm-9";
                                 new_transaksi();
                                 end_transaksi();
                                 reset_pos();
+                                alert("Berhasil");
                             }
                         });
             }

@@ -48,7 +48,7 @@ $classLabel = 'col-xs-4 control-label';
 $classInput = 'col-xs-8';
 
 $data_obat = $db->get_data($db, 'data_obat', '*', '', 'nama ASC', '');
-$satuan = $db->get_data($db, 'satuan', '*', '', '', '');
+$satuan = $db->get_data($db, 'satuan', '*', '', 'nama ASC', '');
 
 $crt = '';
 ?>
@@ -163,7 +163,7 @@ $inputClass = "col-sm-9";
                                 </select>
                             </div>
                             <label for = "" class = "lbl col-sm-1 text-right">Berisi </label>
-                            <div class = "col-sm-2"><input min="0" type = "number" name = "jumlah_satuan" class = "form-control" id = "tb_new_jumlah_satuan"></div>
+                            <div class = "col-sm-2"><input min="1" type = "number" name = "jumlah_satuan" class = "form-control" id = "tb_new_jumlah_satuan" value="1"></div>
                             <div class = "col-sm-3">
                                 <select class="form-control" name="satuan_kecil_obat" id="cb_new_satuan_kecil_obat">
                                     <?php
@@ -282,7 +282,7 @@ $inputClass = "col-sm-9";
             var i;
             for (i = 0; i < obat.length; i++)
             {
-                if (obat[i]['nama'] == nama)
+                if (obat[i]['nama'] == nama.toUpperCase())
                 {
                     input_new_false("Nama Obat Sudah Ada !");
                     status = false;

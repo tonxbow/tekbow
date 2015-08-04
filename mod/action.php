@@ -294,7 +294,6 @@ switch ($request) {
         else
             echo 'fail';
         break;
-
     //CRUD Data User
     case 'update_data_user' :
         $data_request = $_REQUEST['data'];
@@ -337,8 +336,6 @@ switch ($request) {
         } else
             echo 'fail';
         break;
-
-
     case 'barang_masuk':
         $ret = 'success';
         //DATA HEAD <TONX> DATA BODY <TONX> DATA FOOTER
@@ -446,6 +443,47 @@ switch ($request) {
         }
 
         echo $ret;
+        break;
+    case 'get_grand_total':
+        $grand_total = $db->get_data($db, 'transaksi', 'SUM(total_harga) as grand_total', ' datetime BETWEEN CURDATE() AND CURDATE() + INTERVAL 1 DAY AND id_user="' . $_SESSION['id_user'] . '"', '', '');
+        if (count($grand_total) > 0)
+            echo json_encode(array("total" => $objFunction->set_rupiah($grand_total[0]['grand_total'])));
+        else
+            echo '0';
+        break;
+    case 'retur_barang':
+        $id = $objEnkrip->decode($_GET['id']);
+        //Update Stock
+        $obat = $db->get_data($db, 'data_obat', '*', '', '', '');
+        $data_barang = $db->get_data($db, 'transaksi_detail', '*', 'id_transaksi = "' . $id . '"', '', '');
+        //print_r($data_barang);
+        $status = true;
+        for ($i = 0; $i < count($data_barang); $i++) {
+            $id_barang = $data_barang[$i]['id_data_obat'];
+            $jumlah = $data_barang[$i]['jumlah'];
+            $satuan = $data_barang[$i]['satuan'];
+            $satuan_kecil = $objFunction->search_by($obat, 'id_data_obat', $id_barang, 'satuan_kecil');
+            $jumlah_satuan_kecil = $objFunction->search_by($obat, 'id_data_obat', $id_barang, 'jumlah_satuan_kecil');
+            $stock_keluar = $objFunction->search_by($obat, 'id_data_obat', $id_barang, 'stock_keluar');
+            if ($satuan != $satuan_kecil)
+                $jumlah = $jumlah * $jumlah_satuan_kecil;
+
+            $data_trx['stock_keluar'] = $stock_keluar - $jumlah;
+
+            if (!$db->update_data($db, 'data_obat', $data_trx, 'id_data_obat = "' . $id_barang . '"'))
+                $status = false;
+        }
+        if ($status) {
+            if ($db->delete_data($db, 'transaksi_detail', 'id_transaksi = "' . $id . '"')) {
+                if ($db->delete_data($db, 'transaksi', 'id_transaksi = "' . $id . '"'))
+                    echo "berhasil";
+                else
+                    echo "gagal";
+            } else
+                echo "gagal";
+        } else
+            echo "gagal";
+
         break;
 }
 ?>

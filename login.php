@@ -4,10 +4,12 @@ include 'mod/setting.php';
 require_once ('class/database_class.php');
 require_once ('class/function_class.php');
 require_once ('class/enkripsi_class.php');
+require_once ('class/printer_class.php');
 
 $db = new db($dbserver, $dbuser, $dbpass, $dbname);
 $objFunction = new myfunction();
 $objEnkrip = new Encryption();
+$printer = new printer();
 
 if (isset($_POST['username'], $_POST['password'])) {
     $username = mysql_escape_string($_POST['username']);
@@ -27,7 +29,31 @@ if (isset($_POST['username'], $_POST['password'])) {
         <?php
     }
 }
-if (isset($_GET['ask']) && isset($_GET['ask']) == 'logout') {
+if (isset($_GET['ask']) && $_GET['ask'] == 'logout') {
+    $objFunction->logout();
+}
+
+if (isset($_GET['ask']) && $objEnkrip->decode($_GET['ask']) == 'closing') {
+    $iduser = $objEnkrip->decode($_GET['id']);
+    //echo $iduser;
+    $struk = '';
+    $struk .= $printer->PrintHeader();
+    $struk .= "Operator: " . $db->get_curr_data($db, 'user', 'nama', 'id_user = "' . $iduser . '"') . "\r\n";
+    $struk .= "Login   : " . $db->get_curr_data($db, 'user', 'last_login', 'id_user = "' . $iduser . '"') . "\r\n";
+    $struk .= "Closing : " . $objFunction->get_datetime_sql() . "\r\n\r\n";
+    $grand_total = $db->get_data($db, 'transaksi', 'SUM(total_harga) as grand_total', ' datetime BETWEEN CURDATE() AND CURDATE() + INTERVAL 1 DAY AND id_user="' . $iduser . '"', '', '');
+    $struk .= $printer->BigText();
+    $struk .= "Total Transaksi : " . $objFunction->set_rupiah($grand_total[0]['grand_total']) . "\r\n";
+    $struk .= $printer->TextNormal();
+    $struk .= $printer->PrintEnter();
+    $struk .= $printer->PrintEnter();
+    $struk .= $printer->PrintEnter();
+    $struk .= $printer->PrintEnter();
+    $struk .= $printer->PrintEnter();
+    $struk .= $printer->PrintEnter();
+    $struk .= $printer->CutPaper();
+    $setting = $db->get_data($db, 'setting', '*', '', '', '');
+    @$printer->print_data($setting[0]['port'], $struk);
     $objFunction->logout();
 }
 ?>
