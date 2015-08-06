@@ -1,38 +1,4 @@
 <?php
-//echo $objFunction->get_daydate();
-//$data_obat = Array(
-//    array('id_data_obat'=>'obt.0001','nama'=>'bodrex','satuan_besar'=>'1','satuan_kecil'=>2,'jumlah_satuan_kecil'=>'10',)
-//);
-/*
-  $firdausdb = new db('localhost', 'root', '', 'firdausdb');
-  $type = $firdausdb->get_data($firdausdb, 'tbl_obat', '*', '', '', '');
-  $type_obat = $db->get_data($db, 'satuan', '*', '', 'nama ASC', '');
-
-  for ($i=1040;$i<count($type);$i++)
-  {
-  $data['id_data_obat'] = $type[$i]['autonum'];
-  $data['id_group_obat'] = $type[$i]['kode_group'];
-  $data['id_jenis_obat'] = $type[$i]['kode_jenis'];
-  $data['id_type_obat'] = $type[$i]['kode_type'];
-  $data['nama'] = $type[$i]['nama_obat'];
-  $data['barcode'] = $type[$i]['kode_obat'];
-  $data['satuan_besar'] = $objFunction->search_by($satuan,'nama',$type[$i]['satuan_besar'],'id_satuan');
-  $data['satuan_kecil'] = $objFunction->search_by($satuan,'nama',$type[$i]['satuan_kecil'],'id_satuan');
-  $data['jumlah_satuan_kecil'] = $type[$i]['isi_sb'];
-  $data['harga_dasar'] = $type[$i]['harga_dasar'];
-  $data['harga_jual'] = $type[$i]['harga_ppn'];
-
-  $db -> add_data($db,'data_obat',$data);
-  }
-
-  $objFunction->debugArray($type);
-  $objFunction->debugArray($type_obat);
-  exit();
- *
- */
-
-
-
 $data_obat = $db->get_data($db, 'data_obat', '*', '', 'nama ASC', '');
 $satuan = $db->get_data($db, 'satuan', '*', '', 'nama ASC', '');
 $group_obat = $db->get_data($db, 'group_obat', '*', '', 'nama ASC', '');
@@ -117,7 +83,7 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
         <div class="col-sm-4">
             <div class="panel panel-primary">
                 <div class="panel-heading text-center" style="padding: 1px 0 0 0">
-                    <h4 style="color: #fff;">Input Obat</h4>
+                    <div style="color: #fff; font-size: 15px;">Input Obat</div>
                 </div>
                 <div class="panel-body">
                     <div class="col-sm-2 text-right"><label class="lbl"><div style="white-space: nowrap;" title="(F2)">Kode:</div></label></div>
@@ -165,17 +131,20 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
                         <div class="col-sm-3"><input min="0" max="100" type="number" id="tb_discount" class="form-control"></div>
 
                         <div class="col-sm-12 form-entry"></div>
-                        <div class="col-sm-4 text-right"><label class="lbl"><div style="white-space: nowrap;">Harga Beli :</div></label></div>
-                        <div class="col-sm-4"><input type="text" id="tb_harga_jual_satuan" class="form-control" readonly=""></div>
-                        <div class="col-sm-4"><input type="text" id="tb_harga_beli_satuan" class="form-control" readonly="" title="harga beli sebelum"></div>
+                        <div class="col-sm-5 text-right"><label class="lbl"><div style="white-space: nowrap;">Harga Beli Sekarang:</div></label></div>
+                        <div class="col-sm-7"><input type="text" id="tb_harga_jual_satuan" class="form-control" readonly=""></div>
 
                         <div class="col-sm-12 form-entry"></div>
-                        <div class="col-sm-4 text-right"><label class="lbl"><div style="white-space: nowrap;">Harga Dasar :</div></label></div>
-                        <div class="col-sm-8"><input type="number" id="tb_harga_dasar_satuan" class="form-control"></div>
+                        <div class="col-sm-5 text-right"><label class="lbl"><div style="white-space: nowrap;">Harga Beli Sebelum:</div></label></div>
+                        <div class="col-sm-7"><input type="text" id="tb_harga_beli_satuan" class="form-control" readonly="" title="harga beli sebelum"></div>
 
                         <div class="col-sm-12 form-entry"></div>
-                        <div class="col-sm-4 text-right"><label class="lbl"><div style="white-space: nowrap;">Harga Jual (PPN) :</div></label></div>
-                        <div class="col-sm-8"><input type="number" id="tb_harga_jual_ppn" class="form-control" readonly=""></div>
+                        <div class="col-sm-5 text-right"><label class="lbl"><div style="white-space: nowrap;">Harga Dasar :</div></label></div>
+                        <div class="col-sm-7"><input type="number" id="tb_harga_dasar_satuan" class="form-control"></div>
+
+                        <div class="col-sm-12 form-entry"></div>
+                        <div class="col-sm-5 text-right"><label class="lbl"><div style="white-space: nowrap;">Harga Jual (PPN) :</div></label></div>
+                        <div class="col-sm-7"><input type="number" id="tb_harga_jual_ppn" class="form-control" readonly=""></div>
 
 
                     </div>
@@ -416,7 +385,7 @@ $inputClass = "col-sm-9";
     $('#view_pos').hide();
     $('#btn_bayar').hide();
     $('#loading').hide();
-    $('#btn_cancel_transaksi').hide();             //$('#cb_nama_obat').select2();
+    $('#btn_cancel_transaksi').hide(); //$('#cb_nama_obat').select2();
     //SHORTCUT KEYBOARD
     document.addEventListener('keydown', function (e) {
         switch (e.keyCode)
@@ -440,7 +409,6 @@ $inputClass = "col-sm-9";
                 break;
         }
     });
-
     //FUNGSI UMUM
     function toRp(a, b, c, d, e) {
         e = function (f) {
@@ -512,13 +480,11 @@ $inputClass = "col-sm-9";
         $("#tb_discount").val('');
         $('#btn_tambah_obat').slideUp();
         $('#btn_tambah_data_obat').slideDown();
-
         $("#tb_new_harga_beli").val('');
         $("#tb_new_harga_jual").val('');
         $("#tb_new_kode_obat").val('');
         $("#tb_new_nama_obat").val('');
         $("#tb_new_jumlah_satuan").val('');
-        $('#dashboard').show();
         //$("#btn_new_simpan").slideUp();
     }
 
@@ -645,7 +611,6 @@ $inputClass = "col-sm-9";
         }
 
         $("#grand_total").text(toRp(grand_total));
-        check_bayar();
     }
 
     function get_id_trx()
@@ -656,34 +621,18 @@ $inputClass = "col-sm-9";
         });
     }
 
-    function new_transaksi()
+    function refresh_data()
     {
-        $('#dashboard').hide();
-        $('#btn_new_transaksi').hide();
-        $('#btn_cancel_transaksi').show();
-        get_id_trx();
-        $('#sts_trx').attr("disabled", true);
-        input_hide();
-        $('#isi_data').empty();
-        get_grand_total();
-        $('#view_pos').slideDown("slow");
         $.getJSON("mod/action.php", {request: "<?php echo $objEnkrip->encode('get_data_obat'); ?>"})
                 .done(function (result) {
                     obat = result;
                 });
-        $('#tb_kode_obat').focus();
-//console.log("Obat : \n");
-        //      console.log(obat);
         ac_nama_obat = $.map(obat, function (value, key) {
             return {value: value['nama'], data: value['barcode']};
         });
         ac_kode_obat = $.map(obat, function (value, key) {
             return {value: value['barcode'], data: value['nama']};
         });
-        $('#mod_data_obat').modal("hide");
-        //console.log("acc : \n" );
-        // console.log(ac_nama_obat);
-
         $('#tb_kode_obat').autocomplete({
             lookup: ac_kode_obat,
             lookupFilter: function (suggestion, originalQuery, queryLowerCase) {
@@ -728,7 +677,6 @@ $inputClass = "col-sm-9";
                     $("#tb_harga_jual_ppn").attr('title', $("#tb_harga_jual_ppn").val());
                     var harga_jual = $("#tb_harga_jual_ppn").val();
                     $("#tb_harga_dasar_satuan").val(Math.round(harga_jual / 1.1));
-
                     //console.log(harga_jual_sebelum);
                     input_show();
                 }
@@ -740,45 +688,33 @@ $inputClass = "col-sm-9";
                 check_input();
             }
         });
-
     }
 
+    function new_transaksi()
+    {
+        $('#dashboard').hide();
+        refresh_data();
+        $('#btn_new_transaksi').hide();
+        $('#btn_cancel_transaksi').show();
+        get_id_trx();
+        $('#sts_trx').attr("disabled", true);
+        input_hide();
+        $('#isi_data').empty();
+        get_grand_total();
+        $('#view_pos').slideDown("slow");
+        $('#tb_kode_obat').focus();
+        $('#mod_data_obat').modal("hide");
+    }
 
     function end_transaksi()
     {
+        $('#dashboard').show();
         $('#view_pos').slideUp();
         $('#btn_new_transaksi').show();
         $('#btn_cancel_transaksi').hide();
         $('#tgl_trx').val(get_date());
         $('#sts_trx').removeAttr("disabled");
         reset_pos();
-    }
-
-    function check_bayar()
-    {
-        var total = $('#grand_total').text().replace(/[Rp`~!@#$%^&*()_| +\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
-        var bayar = $('#total_bayar').val();
-        if (isNaN(bayar))
-        {
-            $('#total_bayar').val('');
-        }
-        if (total > 0)
-        {
-
-            if (parseInt(bayar) >= parseInt(total))
-            {
-
-                $('#kembali_uang').text(toRp(bayar - total));
-                $('#btn_bayar').slideDown();
-            }
-            else
-            {
-                //alert('masukx');
-                $('#kembali_uang').text('0');
-                $('#btn_bayar').slideUp();
-            }
-        }
-
     }
 
     function get_satuan(id_obat)
@@ -878,7 +814,6 @@ $inputClass = "col-sm-9";
                 '<td id="jumlah_' + count + '" style = "width: 50px; font-size:13px;" class = "text-center">' + jumlah + '</td>' +
                 '<td id="satuan_' + count + '" style = "width: 120px; font-size:13px; vertical-align:middle;"> ' + satuan + ' </td>' +
                 '<td id="harga_' + count + '" style = "width: 120px; font-size:15px; vertical-align:middle;"> ' + toRp(harga) + ' </td></tr>';
-
         if (harga_jual != harga_jual_sebelum)
         {
             $('#txt_id_obat_ubah').text(id_obat);
@@ -904,7 +839,6 @@ $inputClass = "col-sm-9";
         if (status != 1)
         {
             var i;
-
             for (i = 0; i < obat.length; i++)
             {
                 if (obat[i]['nama'] == nama)
@@ -939,7 +873,6 @@ $inputClass = "col-sm-9";
         var harga_jual = $('#tb_new_harga_jual').val();
         var status = true;
         $('#txt_new_keterangan').text("");
-
         if (nama == "")
         {
             //input_new_false("Nama Harus Diisi !");
@@ -973,7 +906,6 @@ $inputClass = "col-sm-9";
         if (action == '1')
         {
             var i;
-
             for (i = 0; i < obat.length; i++)
             {
                 //console.log(obat[i]['nama']);
@@ -1001,9 +933,7 @@ $inputClass = "col-sm-9";
         var jumlah = $('#tb_jml_kecil').val();
         var harga_satuan = $('#tb_harga_beli_satuan').val();
         var diskon = $('#tb_discount').val();
-
         $('#tb_harga_beli').val(jumlah * harga_satuan);
-
         var harga_beli = $('#tb_harga_beli').val();
         var harga_beli_satuan = Math.round((harga_beli - (harga_beli * diskon / 100)) / jumlah);
         $('#tb_harga_jual_satuan').val(harga_beli_satuan);
@@ -1036,7 +966,6 @@ $inputClass = "col-sm-9";
         struk += vendor + ";";
         struk += x + ";";
         struk += "<TONX>";
-
         for (i = 0; i < ar_total.length; i++)
         {
             //nama,jumlah,satuan,batch,expire,harga,id_obat
@@ -1047,9 +976,7 @@ $inputClass = "col-sm-9";
         struk += "<TONX>";
         struk += $('#grand_total').text() + ";";
         struk += $('#tb_penerima').val() + ";";
-
         struk = struk.trim();
-
         $.post("mod/action.php", {request: "<?php echo $objEnkrip->encode('barang_masuk'); ?>", data: struk, print: print})
                 .done(function (result) {
                     console.log("Status : " + result);
@@ -1067,7 +994,6 @@ $inputClass = "col-sm-9";
 
             var id_obat = check_string($('#txt_id_obat_ubah').text());
             var harga_obat = check_string($('#txt_harga_ubah').text());
-
             $.post("mod/action.php", {request: "<?php echo $objEnkrip->encode('update_harga_data_obat'); ?>", id_obat: id_obat, harga: harga_obat})
                     .done(function (result) {
                         if (result != "success")
@@ -1083,11 +1009,6 @@ $inputClass = "col-sm-9";
                         }
 
                     });
-
-
-        });
-        $('#total_bayar').on("keyup change", function () {
-            check_bayar();
         });
         $('#tb_jml_besar').on("change keyup", function () {
             var jml_besar = $('#tb_jml_besar').val();
@@ -1112,7 +1033,6 @@ $inputClass = "col-sm-9";
             {
                 jml_kecil = '';
                 $('#tb_jml_kecil').val(jml_kecil);
-
             }
             else
             {
@@ -1161,7 +1081,6 @@ $inputClass = "col-sm-9";
         $(document).on("change keyup", "#tb_new_jumlah_satuan, #tb_new_harga_beli, #tb_new_harga_jual", function () {
             input_new_check();
         });
-
         $('#btn_new_simpan').on('click', function () {
             if (input_new_check('1'))
             {
@@ -1175,17 +1094,22 @@ $inputClass = "col-sm-9";
                 //var group = $('#cb_new_group_obat').val();
                 //var jenis = $('#cb_new_jenis_obat').val();
                 //var tipe = $('#cb_new_type_obat').val();
-                var data_send = kode + ';' + nama + ';' + satuan_besar + ';' + isi + ';' + satuan_kecil + ';' + harga_beli + ';' + harga_jual;//+ ';' + group + ';' + jenis + ';' + tipe;
+                var data_send = kode + ';' + nama + ';' + satuan_besar + ';' + isi + ';' + satuan_kecil + ';' + harga_beli + ';' + harga_jual; //+ ';' + group + ';' + jenis + ';' + tipe;
                 $.post("mod/action.php", {request: "<?php echo $objEnkrip->encode('add_data_obat'); ?>", data: data_send})
                         .done(function (result) {
                             if (result == "fail")
                                 alert("Penyimpanan Gagal, Keterangan : \n\n " + result);
                             else
                             {
-                                new_transaksi();
-                                end_transaksi();
-                                reset_pos();
+                                //new_transaksi();
+                                //end_transaksi();
+                                //reset_pos();
+                                //new_transaksi();
+                                refresh_data();
                                 alert("Berhasil");
+                                refresh_data();
+                                $('#mod_data_obat').modal("hide");
+
                             }
                         });
             }
@@ -1250,6 +1174,11 @@ $inputClass = "col-sm-9";
             new_transaksi();
         });
         $('#btn_tambah_data_obat').on("click", function () {
+            $('#tb_new_kode_obat').val('');
+            $('#tb_new_nama_obat').val('');
+            $('#tb_new_jumlah_satuan').val('1');
+            $('#tb_new_harga_beli').val('0');
+            $('#tb_new_harga_jual').val('0');
             $('#mod_data_obat').modal("show");
         });
         $('#btn_cancel_transaksi').on("click", function () {
