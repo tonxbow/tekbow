@@ -187,6 +187,8 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
         </div>
     </div>
     <div style="text-align: center;font-family: sans-serif;font-size: 100px; margin-top: 50px;" id="dashboard">
+        <b style="font-size: 80px; color: red;">Toko Obat Firdaus</b>
+        <br/>
         <b style="font-size: 40px;"><?php echo $objFunction->get_date_format($objFunction->get_daydate()); ?></b>
         <br/>
         <i class="fa fa-clock-o"></i>
@@ -630,6 +632,7 @@ $inputClass = "col-sm-9";
         ac_nama_obat = $.map(obat, function (value, key) {
             return {value: value['nama'], data: value['barcode']};
         });
+        /*
         ac_kode_obat = $.map(obat, function (value, key) {
             return {value: value['barcode'], data: value['nama']};
         });
