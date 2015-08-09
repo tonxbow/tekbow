@@ -660,7 +660,7 @@ $inputClass = "col-sm-9";
                 input_hide();
                 check_input();
             }
-        });
+        });*/
 
         $('#cb_nama_obat').autocomplete({
             lookup: ac_nama_obat,
@@ -692,6 +692,33 @@ $inputClass = "col-sm-9";
             }
         });
     }
+
+$('#tb_kode_obat').on("keyup", function () {
+
+            if ($('#tb_kode_obat').val() != '')
+            {
+                $("#cb_nama_obat").val(search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'nama'));
+                $("#tb_satuan_jml_besar").val(search_by(satuan, 'id_satuan', search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'satuan_besar'), 'nama'));
+                $("#tb_satuan_jml_kecil").val(search_by(satuan, 'id_satuan', search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'satuan_kecil'), 'nama'));
+                $("#tb_harga_beli_satuan").val(search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'harga_dasar'));
+                $("#tb_harga_jual_ppn").val(search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'harga_jual'));
+                $("#tb_harga_jual_ppn").attr('title', $("#tb_harga_jual_ppn").val());
+                var harga_jual = $("#tb_harga_jual_ppn").val();
+                $("#tb_harga_dasar_satuan").val(Math.round(harga_jual / 1.1));
+                if ($("#cb_nama_obat").val() != '')
+                    input_show();
+                check_input();
+            }
+            else
+            {
+                input_hide();
+            }
+
+            check_input();
+            //var kode_obat = $('#kode_obat').val();
+            //if (kode_obat.substring(kode_obat.length - 1) == "\n")
+            //console.log("ok");
+        });
 
     function new_transaksi()
     {
