@@ -6,10 +6,6 @@ $type_obat = $db->get_data($db, 'type_obat', '*', '', 'nama ASC', '');
 $jenis_obat = $db->get_data($db, 'jenis_obat', '*', '', 'nama ASC', '');
 $user = $db->get_data($db, 'user', '*', '', 'nama ASC', '');
 $setting = $db->get_data($db, 'setting', '*', '', '', '');
-//$objFunction->debugArray($data_obat);
-//$objFunction->debugArray($satuan);
-
-
 
 $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 'jumlah_satuan_kecil', 'harga_jual', 'stock_masuk', 'stock_keluar');
 ?>
@@ -92,17 +88,6 @@ $datafield_obat = array('id_data_obat', 'nama', 'satuan_besar', 'satuan_kecil', 
 
                     <div class="col-sm-2 text-right"><label class="lbl"><div style="white-space: nowrap;">Nama :</div></label></div>
                     <div class="col-sm-10">
-                        <!--
-                        <select type="text" id="cb_nama_obat" class="selection" >
-                            <option value="0">-=Pilih Obat=-</option>
-                        <?php
-                        for ($i = 0; $i < count($data_obat); $i++) {
-                            //$sisa_stock = $data_obat[$i]['stock_masuk']-$data_obat[$i]['stock_keluar'];
-                            echo '<option value="' . $data_obat[$i]['id_data_obat'] . '">' . $data_obat[$i]['nama'] . '</option>';
-                        }
-                        ?>
-
-                        </select>-->
                         <input type="text" id="cb_nama_obat" class="form-control">
                     </div>
                     <div id="keterangan_obat">
@@ -633,34 +618,34 @@ $inputClass = "col-sm-9";
             return {value: value['nama'], data: value['barcode']};
         });
         /*
-        ac_kode_obat = $.map(obat, function (value, key) {
-            return {value: value['barcode'], data: value['nama']};
-        });
-        $('#tb_kode_obat').autocomplete({
-            lookup: ac_kode_obat,
-            lookupFilter: function (suggestion, originalQuery, queryLowerCase) {
-                var re = new RegExp('\\b' + $.Autocomplete.utils.escapeRegExChars(queryLowerCase), 'gi');
-                return re.test(suggestion.value);
-            },
-            onSelect: function (suggestion) {
-                $("#cb_nama_obat").val(search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'nama'));
-                $("#tb_satuan_jml_besar").val(search_by(satuan, 'id_satuan', search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'satuan_besar'), 'nama'));
-                $("#tb_satuan_jml_kecil").val(search_by(satuan, 'id_satuan', search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'satuan_kecil'), 'nama'));
-                $("#tb_harga_beli_satuan").val(search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'harga_dasar'));
-                $("#tb_harga_jual_ppn").val(search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'harga_jual'));
-                $("#tb_harga_jual_ppn").attr('title', $("#tb_harga_jual_ppn").val());
-                var harga_jual = $("#tb_harga_jual_ppn").val();
-                $("#tb_harga_dasar_satuan").val(Math.round(harga_jual / 1.1));
-                if ($("#cb_kode_obat").val() != '')
-                    input_show();
-                check_input();
-            },
-            onInvalidateSelection: function () {
-                reset_pos();
-                input_hide();
-                check_input();
-            }
-        });*/
+         ac_kode_obat = $.map(obat, function (value, key) {
+         return {value: value['barcode'], data: value['nama']};
+         });
+         $('#tb_kode_obat').autocomplete({
+         lookup: ac_kode_obat,
+         lookupFilter: function (suggestion, originalQuery, queryLowerCase) {
+         var re = new RegExp('\\b' + $.Autocomplete.utils.escapeRegExChars(queryLowerCase), 'gi');
+         return re.test(suggestion.value);
+         },
+         onSelect: function (suggestion) {
+         $("#cb_nama_obat").val(search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'nama'));
+         $("#tb_satuan_jml_besar").val(search_by(satuan, 'id_satuan', search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'satuan_besar'), 'nama'));
+         $("#tb_satuan_jml_kecil").val(search_by(satuan, 'id_satuan', search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'satuan_kecil'), 'nama'));
+         $("#tb_harga_beli_satuan").val(search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'harga_dasar'));
+         $("#tb_harga_jual_ppn").val(search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'harga_jual'));
+         $("#tb_harga_jual_ppn").attr('title', $("#tb_harga_jual_ppn").val());
+         var harga_jual = $("#tb_harga_jual_ppn").val();
+         $("#tb_harga_dasar_satuan").val(Math.round(harga_jual / 1.1));
+         if ($("#cb_kode_obat").val() != '')
+         input_show();
+         check_input();
+         },
+         onInvalidateSelection: function () {
+         reset_pos();
+         input_hide();
+         check_input();
+         }
+         });*/
 
         $('#cb_nama_obat').autocomplete({
             lookup: ac_nama_obat,
@@ -693,32 +678,32 @@ $inputClass = "col-sm-9";
         });
     }
 
-$('#tb_kode_obat').on("keyup", function () {
+    $('#tb_kode_obat').on("keyup", function () {
 
-            if ($('#tb_kode_obat').val() != '')
-            {
-                $("#cb_nama_obat").val(search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'nama'));
-                $("#tb_satuan_jml_besar").val(search_by(satuan, 'id_satuan', search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'satuan_besar'), 'nama'));
-                $("#tb_satuan_jml_kecil").val(search_by(satuan, 'id_satuan', search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'satuan_kecil'), 'nama'));
-                $("#tb_harga_beli_satuan").val(search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'harga_dasar'));
-                $("#tb_harga_jual_ppn").val(search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'harga_jual'));
-                $("#tb_harga_jual_ppn").attr('title', $("#tb_harga_jual_ppn").val());
-                var harga_jual = $("#tb_harga_jual_ppn").val();
-                $("#tb_harga_dasar_satuan").val(Math.round(harga_jual / 1.1));
-                if ($("#cb_nama_obat").val() != '')
-                    input_show();
-                check_input();
-            }
-            else
-            {
-                input_hide();
-            }
-
+        if ($('#tb_kode_obat').val() != '')
+        {
+            $("#cb_nama_obat").val(search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'nama'));
+            $("#tb_satuan_jml_besar").val(search_by(satuan, 'id_satuan', search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'satuan_besar'), 'nama'));
+            $("#tb_satuan_jml_kecil").val(search_by(satuan, 'id_satuan', search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'satuan_kecil'), 'nama'));
+            $("#tb_harga_beli_satuan").val(search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'harga_dasar'));
+            $("#tb_harga_jual_ppn").val(search_by(obat, 'barcode', $('#tb_kode_obat').val(), 'harga_jual'));
+            $("#tb_harga_jual_ppn").attr('title', $("#tb_harga_jual_ppn").val());
+            var harga_jual = $("#tb_harga_jual_ppn").val();
+            $("#tb_harga_dasar_satuan").val(Math.round(harga_jual / 1.1));
+            if ($("#cb_nama_obat").val() != '')
+                input_show();
             check_input();
-            //var kode_obat = $('#kode_obat').val();
-            //if (kode_obat.substring(kode_obat.length - 1) == "\n")
-            //console.log("ok");
-        });
+        }
+        else
+        {
+            input_hide();
+        }
+
+        check_input();
+        //var kode_obat = $('#kode_obat').val();
+        //if (kode_obat.substring(kode_obat.length - 1) == "\n")
+        //console.log("ok");
+    });
 
     function new_transaksi()
     {
